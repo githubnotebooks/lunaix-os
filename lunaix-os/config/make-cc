@@ -1,0 +1,7 @@
+CC := i686-elf-g++
+AS := i686-elf-as
+
+O := -O2
+W := -Wall -Wextra
+CFLAGS := -ffreestanding $(O) $(W)
+LDFLAGS := -ffreestanding $(O) -nostdlib -lgcc
