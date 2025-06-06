@@ -1,7 +1,9 @@
 CC := i686-elf-g++
 AS := i686-elf-as
 
+
+ARCH_OPT := -D__ARCH_IA32
 O := -O2
 W := -Wall -Wextra
-CFLAGS := -ffreestanding $(O) $(W)
+CFLAGS := -ffreestanding $(O) $(W) $(ARCH_OPT)
 LDFLAGS := -ffreestanding $(O) -nostdlib -lgcc

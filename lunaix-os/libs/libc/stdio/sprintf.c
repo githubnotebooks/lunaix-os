@@ -70,7 +70,10 @@ void __sprintf_internal(char *buffer, const char *fmt, va_list args)
             }
             case 'p': {
                 uintptr_t dptr = va_arg(args, uintptr_t);
-                __itoa_internal((int)dptr, buffer + ptr, 16, &adv);
+                buffer[ptr] = '0';
+                buffer[ptr + 1] = 'x';
+                __itoa_internal((int)dptr, buffer + ptr + 2, 16, &adv);
+                adv += 2;
                 break;
             }
             case '%': {

@@ -1,6 +1,6 @@
 #pragma once
 
-typedef unsigned short vga_attribute;
+using vga_attribute = unsigned short;
 
 #define VGA_COLOR_BLACK 0
 #define VGA_COLOR_BLUE 1
@@ -18,6 +18,10 @@ typedef unsigned short vga_attribute;
 #define VGA_COLOR_LIGHT_MAGENTA 13
 #define VGA_COLOR_LIGHT_BROWN 14
 #define VGA_COLOR_WHITE 15
+
+void tty_init(void *vga_buf);
+
+void tty_set_buffer(void *vga_buf);
 
 void tty_set_theme(vga_attribute fg, vga_attribute bg);
 

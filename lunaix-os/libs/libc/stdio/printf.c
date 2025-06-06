@@ -1,6 +1,6 @@
 #define __LUNAIX_LIBC
 #include "libc/stdio.h"
-#include "lunaix/tty/tty.h"
+#include "lunaix/tty/tty.hpp"
 #include <stdarg.h>
 
 void printf(const char *fmt, ...)

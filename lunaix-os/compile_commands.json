@@ -6,16 +6,17 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
-      "build/obj/kernel/interrupts/interrupts.c.o",
-      "kernel/interrupts/interrupts.c"
+      "build/obj/kernel/mm/pmm.c.o",
+      "kernel/mm/pmm.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/interrupts/interrupts.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/interrupts/interrupts.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/mm/pmm.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/mm/pmm.c.o"
   },
   {
     "arguments": [
@@ -24,9 +25,131 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
+      "-D__ARCH_IA32",
+      "-o",
+      "build/obj/kernel/mm/vmm.c.o",
+      "kernel/mm/vmm.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/mm/vmm.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/mm/vmm.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-o",
+      "build/obj/kernel/asm/x86/interrupt.S.o",
+      "kernel/asm/x86/interrupt.S"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/interrupt.S",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/interrupt.S.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-D__ARCH_IA32",
+      "-o",
+      "build/obj/kernel/asm/x86/gdt.c.o",
+      "kernel/asm/x86/gdt.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/gdt.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/gdt.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-o",
+      "build/obj/kernel/asm/x86/prologue.S.o",
+      "kernel/asm/x86/prologue.S"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/prologue.S",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/prologue.S.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-D__ARCH_IA32",
+      "-o",
+      "build/obj/kernel/asm/x86/idt.c.o",
+      "kernel/asm/x86/idt.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/idt.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/idt.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-D__ARCH_IA32",
+      "-o",
+      "build/obj/kernel/asm/x86/interrupts.c.o",
+      "kernel/asm/x86/interrupts.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/interrupts.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/interrupts.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-D__ARCH_IA32",
+      "-o",
+      "build/obj/kernel/k_main.c.o",
+      "kernel/k_main.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/k_main.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/k_main.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
       "build/obj/kernel/tty/tty.c.o",
       "kernel/tty/tty.c"
@@ -42,16 +165,17 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
-      "build/obj/kernel/kernel.c.o",
-      "kernel/kernel.c"
+      "build/obj/hal/cpu.c.o",
+      "hal/cpu.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/kernel.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/kernel.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/hal/cpu.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/hal/cpu.c.o"
   },
   {
     "arguments": [
@@ -71,13 +195,19 @@
       "/usr/bin/i686-elf-g++",
       "-Iincludes",
       "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
-      "build/obj/arch/x86/interrupt.S.o",
-      "arch/x86/interrupt.S"
+      "build/obj/arch/x86/hhk.c.o",
+      "arch/x86/hhk.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/arch/x86/interrupt.S",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/arch/x86/interrupt.S.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/arch/x86/hhk.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/arch/x86/hhk.c.o"
   },
   {
     "arguments": [
@@ -86,45 +216,10 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
-      "-o",
-      "build/obj/arch/x86/gdt.c.o",
-      "arch/x86/gdt.c"
-    ],
-    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/arch/x86/gdt.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/arch/x86/gdt.c.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/i686-elf-g++",
-      "-Iincludes",
-      "-c",
-      "-g",
-      "-ffreestanding",
-      "-O0",
-      "-Wall",
-      "-Wextra",
-      "-o",
-      "build/obj/arch/x86/idt.c.o",
-      "arch/x86/idt.c"
-    ],
-    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/arch/x86/idt.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/arch/x86/idt.c.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/i686-elf-g++",
-      "-Iincludes",
-      "-c",
-      "-g",
-      "-ffreestanding",
-      "-O0",
-      "-Wall",
-      "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
       "build/obj/libs/libc/stdlib/itoa.c.o",
       "libs/libc/stdlib/itoa.c"
@@ -140,9 +235,10 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
       "build/obj/libs/libc/string/mem.c.o",
       "libs/libc/string/mem.c"
@@ -158,9 +254,10 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
       "build/obj/libs/libc/string/strlen.c.o",
       "libs/libc/string/strlen.c"
@@ -176,9 +273,10 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
       "build/obj/libs/libc/string/strcpy.c.o",
       "libs/libc/string/strcpy.c"
@@ -194,9 +292,10 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
       "build/obj/libs/libc/stdio/sprintf.c.o",
       "libs/libc/stdio/sprintf.c"
@@ -212,9 +311,10 @@
       "-c",
       "-g",
       "-ffreestanding",
-      "-O0",
+      "-Og",
       "-Wall",
       "-Wextra",
+      "-D__ARCH_IA32",
       "-o",
       "build/obj/libs/libc/stdio/printf.c.o",
       "libs/libc/stdio/printf.c"

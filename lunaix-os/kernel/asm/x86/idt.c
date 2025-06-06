@@ -1,6 +1,6 @@
-#include "lunaix/arch/idt.h"
-#include "lunaix/interrupts/interrupts.h"
-#include "lunaix/interrupts/types.h"
+#include "arch/x86/idt.hpp"
+#include "arch/x86/interrupts.hpp"
+#include "arch/x86/types.hpp"
 #include <stdint.h>
 
 #define IDT_ENTRY 32
@@ -17,7 +17,7 @@ void _set_idt_entry(uint32_t vector, uint16_t seg_selector, void (*isr)(),
     _idt[vector] |= (seg_selector << 16) | (offset & 0x0000ffff);
 }
 
-void _init_idt()
+extern "C" void _init_idt()
 {
     _set_idt_entry(FAULT_DIVISION_ERROR, 0x08, _asm_isr0, 0);
 }

@@ -1,11 +1,12 @@
-#include "lunaix/interrupts/interrupts.h"
+#include "arch/x86/interrupts.hpp"
 #include "libc/stdio.h"
-#include "lunaix/tty/tty.h"
+#include "lunaix/tty/tty.hpp"
 
 void isr0([[maybe_unused]] isr_param *param)
 {
     tty_clear();
-    printf("!!PANIC!!\n");
+    printf("[PANIC] Exception (%d) CS=0x%X, EIP=0x%X", param->vector, param->cs,
+           param->eip);
 }
 
 extern "C"

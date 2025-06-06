@@ -9,6 +9,15 @@
 #define SD_32BITS(x) (x << 22)
 #define SD_4K_GRAN(x) (x << 23)
 
+#define SD_TYPE(x) (x << 8)
+#define SD_CODE_DATA(x) (x << 12)
+#define SD_DPL(x) (x << 13)
+#define SD_PRESENT(x) (x << 15)
+#define SD_AVL(x) (x << 20)
+#define SD_64BITS(x) (x << 21)
+#define SD_32BITS(x) (x << 22)
+#define SD_4K_GRAN(x) (x << 23)
+
 #define SEG_LIM_L(x) (x & 0x0ffff)
 #define SEG_LIM_H(x) (x & 0xf0000)
 #define SEG_BASE_L(x) ((x & 0x0000ffff) << 16)
@@ -48,4 +57,4 @@
     SD_TYPE(SEG_DATA_RDWR) | SD_CODE_DATA(1) | SD_DPL(3) | SD_PRESENT(1) |     \
         SD_AVL(0) | SD_64BITS(0) | SD_32BITS(1) | SD_4K_GRAN(1)
 
-void _init_gdt();
+extern "C" void _init_gdt();
