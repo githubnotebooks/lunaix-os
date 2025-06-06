@@ -4,7 +4,6 @@
 
 void isr0([[maybe_unused]] isr_param *param)
 {
-    tty_clear();
     printf("[PANIC] Exception (%d) CS=0x%X, EIP=0x%X", param->vector, param->cs,
            param->eip);
 }

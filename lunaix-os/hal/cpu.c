@@ -64,6 +64,7 @@ reg32 cpu_r_cr3()
     asm volatile("mov %%cr3, %0" : "=r"(value));
     return value;
 }
+#pragma GCC diagnostic push
 
 void cpu_w_cr0(reg32 v)
 {

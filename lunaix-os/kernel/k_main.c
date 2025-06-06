@@ -15,9 +15,9 @@
 
 #include "libc/stdio.h"
 
-extern char __kernel_start;
-extern char __kernel_end;
-extern char __init_hhk_end;
+extern uint8_t __kernel_start;
+extern uint8_t __kernel_end;
+extern uint8_t __init_hhk_end;
 
 extern "C" void _kernel_init(multiboot_info_t *mb_info)
 {
@@ -34,7 +34,7 @@ extern "C" void _kernel_init(multiboot_info_t *mb_info)
 
 #pragma region INIT_MM
     // 初始化物理内存管理器
-    pmm_init((MEM_1MB + mb_info->mem_upper) << 10);
+    pmm_init(MEM_1MB + (mb_info->mem_upper << 10));
     vmm_init();
 #pragma endregion
 
@@ -128,5 +128,4 @@ extern "C" void _kernel_main()
     uintptr_t k_start = reinterpret_cast<uintptr_t>(vmm_v2p(&__kernel_start));
     printf("The kernel's base address mapping: %p->%p\n", &__kernel_start,
            k_start);
-    // __asm__("int $0\n");
 }
