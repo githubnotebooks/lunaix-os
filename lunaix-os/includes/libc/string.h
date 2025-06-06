@@ -13,3 +13,7 @@ void *memset(void *, int, size_t);
 size_t strlen(const char *str);
 
 char *strcpy(char *dest, const char *src);
+
+size_t strnlen(const char *str, size_t max_len);
+
+const char *strchr(const char *str, int character);

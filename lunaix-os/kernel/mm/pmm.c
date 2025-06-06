@@ -1,5 +1,5 @@
 #include "lunaix/mm/pmm.hpp"
-#include "lunaix/mm/page.hpp"
+#include "lunaix/mm/page.h"
 
 #define MARK_PG_AUX_VAR(ppn)                                                   \
     uint32_t group = ppn / 8;                                                  \

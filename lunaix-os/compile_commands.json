@@ -11,6 +11,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/mm/dmm.c.o",
       "kernel/mm/dmm.c"
@@ -31,6 +32,28 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/mm/page.c.o",
+      "kernel/mm/page.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/mm/page.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/mm/page.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/mm/pmm.c.o",
       "kernel/mm/pmm.c"
@@ -51,6 +74,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/mm/vmm.c.o",
       "kernel/mm/vmm.c"
@@ -84,6 +108,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/asm/x86/gdt.c.o",
       "kernel/asm/x86/gdt.c"
@@ -117,6 +142,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/asm/x86/idt.c.o",
       "kernel/asm/x86/idt.c"
@@ -137,6 +163,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/asm/x86/interrupts.c.o",
       "kernel/asm/x86/interrupts.c"
@@ -157,6 +184,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/assert.c.o",
       "kernel/assert.c"
@@ -177,6 +205,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/k_init.c.o",
       "kernel/k_init.c"
@@ -197,6 +226,28 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/spike.c.o",
+      "kernel/spike.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/spike.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/spike.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/k_main.c.o",
       "kernel/k_main.c"
@@ -217,6 +268,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/kernel/tty/tty.c.o",
       "kernel/tty/tty.c"
@@ -237,6 +289,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/hal/cpu.c.o",
       "hal/cpu.c"
@@ -270,6 +323,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/arch/x86/hhk.c.o",
       "arch/x86/hhk.c"
@@ -290,6 +344,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/libs/libc/stdlib/itoa.c.o",
       "libs/libc/stdlib/itoa.c"
@@ -310,6 +365,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/libs/libc/string/mem.c.o",
       "libs/libc/string/mem.c"
@@ -330,6 +386,28 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/libs/libc/string/strchr.c.o",
+      "libs/libc/string/strchr.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/libc/string/strchr.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/libc/string/strchr.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/libs/libc/string/strlen.c.o",
       "libs/libc/string/strlen.c"
@@ -350,6 +428,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/libs/libc/string/strcpy.c.o",
       "libs/libc/string/strcpy.c"
@@ -370,6 +449,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/libs/libc/stdio/sprintf.c.o",
       "libs/libc/stdio/sprintf.c"
@@ -390,6 +470,7 @@
       "-Wextra",
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
       "-o",
       "build/obj/libs/libc/stdio/printf.c.o",
       "libs/libc/stdio/printf.c"

@@ -13,5 +13,6 @@
 #define assert(cond) // nothing
 #endif
 
-void __assert_fail(const char *expr, const char *file, unsigned int line)
+extern "C" void __assert_fail(const char *expr, const char *file,
+                              unsigned int line)
     __attribute__((noinline, noreturn));

@@ -1,15 +1,15 @@
-#include "lunaix/constants.hpp"
-#include "lunaix/tty/tty.hpp"
-
-#include "lunaix/mm/page.hpp"
-#include "lunaix/mm/pmm.hpp"
-#include "lunaix/mm/vmm.hpp"
-
 #include "arch/x86/boot/multiboot.h"
 #include "arch/x86/idt.hpp"
-
 #include "libc/stdio.h"
-
+#include "lunaix/constants.hpp"
+#include "lunaix/mm/dmm.hpp"
+#include "lunaix/mm/page.h"
+#include "lunaix/mm/pmm.hpp"
+#include "lunaix/mm/vmm.hpp"
+#include "lunaix/spike.h"
+#include "lunaix/tty/tty.hpp"
+#include <arch/x86/boot/multiboot.h>
+#include <libc/stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -17,6 +17,10 @@ extern uint8_t __kernel_start;
 extern uint8_t __kernel_end;
 extern uint8_t __init_hhk_end;
 void setup_memory(multiboot_memory_map_t *map, size_t map_size);
+void setup_kernel_runtime();
+
+void setup_memory(multiboot_memory_map_t *map, size_t map_size);
+
 void setup_kernel_runtime();
 
 extern "C" void _kernel_pre_init(multiboot_info_t *mb_info)
@@ -39,8 +43,7 @@ extern "C" void _kernel_init(multiboot_info_t *mb_info)
 
     unsigned int map_size =
         mb_info->mmap_length / sizeof(multiboot_memory_map_t);
-    setup_memory(reinterpret_cast<multiboot_memory_map_t *>(mb_info->mmap_addr),
-                 map_size);
+    setup_memory((multiboot_memory_map_t *)mb_info->mmap_addr, map_size);
     setup_kernel_runtime();
 }
 
@@ -55,6 +58,8 @@ extern "C" void _kernel_post_init()
     {
         vmm_unmap_page((void *)(i << PG_SIZE_BITS));
     }
+
+    assert(dmm_init());
 }
 
 // 按照 Memory map 标识可用的物理页

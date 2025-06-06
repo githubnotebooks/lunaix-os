@@ -1,16 +1,23 @@
 #include "arch/x86/interrupts.hpp"
 #include "libc/stdio.h"
-#include "lunaix/assert.hpp"
+#include "lunaix/tty/tty.hpp"
 
-void panic(const char *msg, isr_param *param)
+void panic_msg(const char *msg)
 {
     tty_set_theme(VGA_COLOR_WHITE, VGA_COLOR_RED);
     tty_clear_line(10);
     tty_clear_line(11);
     tty_clear_line(12);
     tty_set_cpos(0, 11);
-    printf(" INT %u: (%x) [0x%x: 0x%x] %s", param->vector, param->err_code,
-           param->cs, param->eip, msg);
+    printf("  %s", msg);
+}
+
+void panic(const char *msg, isr_param *param)
+{
+    char buf[1024];
+    sprintf(buf, "INT %u: (%x) [%p: %p] %s", param->vector, param->err_code,
+            param->cs, param->eip, msg);
+    panic_msg(buf);
     while (1)
         ;
 }
@@ -29,6 +36,11 @@ extern "C"
             break; // never reach
         case FAULT_PAGE_FAULT:
             panic("Page Fault", param);
+            break; // never reach
+        case LUNAIX_SYS_PANIC:
+            panic_msg((char *)(param->registers.edi));
+            while (1)
+                ;
             break; // never reach
         default:
             panic("Unknown Interrupt", param);

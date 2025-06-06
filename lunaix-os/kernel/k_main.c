@@ -2,6 +2,7 @@
 #include "libc/stdio.h"
 #include "lunaix/mm/dmm.hpp"
 #include "lunaix/mm/vmm.hpp"
+#include "lunaix/spike.h"
 #include <stdint.h>
 
 extern uint8_t __kernel_start;
@@ -21,8 +22,6 @@ extern "C" void _kernel_main()
     printf("The kernel's base address mapping: %p->%p\n", &__kernel_start,
            k_start);
 
-    dmm_init();
-
     // test malloc & free
 
     uint32_t **arr = (uint32_t **)lx_malloc(10 * sizeof(uint32_t *));
@@ -32,7 +31,7 @@ extern "C" void _kernel_main()
         arr[i] = (uint32_t *)lx_malloc((i + 1) * 2);
     }
 
-    void* big_ = lx_malloc(8192);
+    void *big_ = lx_malloc(8192);
 
     for (size_t i = 0; i < 10; i++)
     {
@@ -41,5 +40,4 @@ extern "C" void _kernel_main()
 
     lx_free(arr);
     lx_free(big_);
-    // assert(0);
 }

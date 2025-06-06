@@ -10,13 +10,13 @@
  *
  */
 
-#include "lunaix/mm/dmm.hpp"
-#include "lunaix/mm/page.hpp"
-#include "lunaix/mm/vmm.hpp"
+// TODO: Make the dmm portable
 
-#include "lunaix/assert.hpp"
+#include "lunaix/mm/dmm.hpp"
 #include "lunaix/constants.hpp"
-#include "lunaix/spike.hpp"
+#include "lunaix/mm/page.h"
+#include "lunaix/mm/vmm.hpp"
+#include "lunaix/spike.h"
 
 #define M_ALLOCATED 0x1
 #define M_PREV_FREE 0x2
@@ -64,7 +64,7 @@ int dmm_init()
     SW(heap_start + WSIZE, PACK(0, M_ALLOCATED));
     current_heap_top = (char *)current_heap_top + WSIZE;
 
-    return reinterpret_cast<int>(lx_grow_heap(HEAP_INIT_SIZE));
+    return lx_grow_heap(HEAP_INIT_SIZE) != NULL;
 }
 
 int lxsbrk(void *addr)
@@ -76,14 +76,14 @@ void *lxbrk(size_t size)
 {
     if (size == 0)
     {
-        return NULL;
+        return current_heap_top;
     }
 
     // plus WSIZE is the overhead for epilogue marker
     size += WSIZE;
     void *next = (char *)current_heap_top + ROUNDUP((uintptr_t)size, WSIZE);
 
-    if (((uintptr_t)next) >= K_STACK_START)
+    if ((uintptr_t)next >= K_STACK_START)
     {
         return NULL;
     }
@@ -95,24 +95,24 @@ void *lxbrk(size_t size)
     if (heap_top_pg != PG_ALIGN(next))
     {
         // if next do require new pages to be allocated
-        if (!vmm_alloc_pages((char *)heap_top_pg + PG_SIZE,
-                             ROUNDUP(size, PG_SIZE), PG_PRESENT | PG_WRITE))
+        if (!vmm_alloc_pages((void *)(heap_top_pg + PG_SIZE),
+                             ROUNDUP(size, PG_SIZE), PG_PREM_RW))
         {
             return NULL;
         }
     }
 
-    uintptr_t old = (uintptr_t)current_heap_top;
+    void *old = current_heap_top;
     current_heap_top = (char *)next - WSIZE;
-    return (void *)old;
+    return old;
 }
 
 void *lx_grow_heap(size_t sz)
 {
-    uintptr_t start;
+    void *start;
 
     sz = ROUNDUP(sz, BOUNDARY);
-    if (!(start = (uintptr_t)lxbrk(sz)))
+    if (!(start = lxbrk(sz)))
     {
         return NULL;
     }
@@ -120,7 +120,7 @@ void *lx_grow_heap(size_t sz)
     uint32_t old_marker = *((uint32_t *)start);
     uint32_t free_hdr = PACK(sz, CHUNK_PF(old_marker));
     SW(start, free_hdr);
-    SW(FPTR(start, sz), free_hdr);
+    SW(FPTR((uintptr_t)start, sz), free_hdr);
     SW(NEXT_CHK(start), PACK(0, M_ALLOCATED | M_PREV_FREE));
 
     return coalesce((uint8_t *)start);
@@ -134,7 +134,7 @@ void *lx_malloc(size_t size)
     // round to largest 4B aligned value
     //  and space for header
     size = ROUNDUP(size, BOUNDARY) + WSIZE;
-    while (ptr < current_heap_top)
+    while (ptr < (uint8_t *)current_heap_top)
     {
         uint32_t header = *((uint32_t *)ptr);
         size_t chunk_size = CHUNK_S(header);

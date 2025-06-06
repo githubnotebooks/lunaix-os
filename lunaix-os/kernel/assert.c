@@ -1,6 +1,7 @@
 #include "lunaix/assert.hpp"
 
-void __assert_fail(const char *expr, const char *file, unsigned int line)
+extern "C" void __assert_fail(const char *expr, const char *file,
+                              unsigned int line)
 {
     tty_set_theme(VGA_COLOR_BLACK, VGA_COLOR_LIGHT_RED);
     tty_clear_line(10);
