@@ -7,7 +7,7 @@
 #include "lunaix/mm/page.h"
 #include "lunaix/mm/pmm.hpp"
 #include "lunaix/mm/vmm.hpp"
-#include "lunaix/spike.h"
+#include "lunaix/spike.hpp"
 #include "lunaix/tty/tty.hpp"
 #include <stddef.h>
 #include <stdint.h>
@@ -58,7 +58,7 @@ extern "C" void _kernel_post_init()
         vmm_unmap_page((void *)(i << PG_SIZE_BITS));
     }
 
-    assert(kalloc_init());
+    assert_msg(kalloc_init(), "Fail to initialize heap");
 }
 
 // 按照 Memory map 标识可用的物理页

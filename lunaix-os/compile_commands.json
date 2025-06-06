@@ -207,27 +207,6 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/kernel/assert.c.o",
-      "kernel/assert.c"
-    ],
-    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/assert.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/assert.c.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/i686-elf-g++",
-      "-Iincludes",
-      "-c",
-      "-g",
-      "-ffreestanding",
-      "-Og",
-      "-Wall",
-      "-Wextra",
-      "-Wno-unknown-pragmas",
-      "-D__ARCH_IA32",
-      "-D__LUNAIXOS_DEBUG__",
-      "-o",
       "build/obj/kernel/k_init.c.o",
       "kernel/k_init.c"
     ],

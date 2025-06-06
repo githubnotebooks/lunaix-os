@@ -1,10 +1,9 @@
 #include "lunaix/mm/vmm.hpp"
 #include "hal/cpu.hpp"
 #include "libc/string.h"
-#include "lunaix/assert.hpp"
 #include "lunaix/mm/page.h"
 #include "lunaix/mm/pmm.hpp"
-#include "lunaix/spike.h"
+#include "lunaix/spike.hpp"
 #include <stdbool.h>
 
 void vmm_init()

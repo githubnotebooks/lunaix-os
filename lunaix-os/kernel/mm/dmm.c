@@ -4,8 +4,12 @@
  * @brief Dynamic memory manager dedicated to kernel heap. Using implicit free
  * list implementation. This is designed to be portable, so it can serve as
  * syscalls to malloc/free in the c std lib.
- * @version 0.1
- * @date 2022-02-28
+ *
+ * This version of code is however the simplest and yet insecured,
+ * it just to demonstrate how the malloc/free works behind the stage
+ *
+ * @version 0.2
+ * @date 2022-03-3
  *
  * @copyright Copyright (c) Lunaixsky 2022
  *
@@ -15,7 +19,7 @@
 #include "lunaix/constants.hpp"
 #include "lunaix/mm/page.h"
 #include "lunaix/mm/vmm.hpp"
-#include "lunaix/spike.h"
+#include "lunaix/spike.hpp"
 
 #define M_ALLOCATED 0x1
 #define M_PREV_FREE 0x2
@@ -73,17 +77,15 @@ void *lxbrk(heap_context_t *heap, size_t size)
         return heap->brk;
     }
 
-    // plus WSIZE is the overhead for epilogue marker
-    size += WSIZE;
-    void *next = (char *)heap->brk + ROUNDUP((uintptr_t)size, WSIZE);
+    // The upper bound of our next brk of heap given the size.
+    // This will be used to calculate the page we need to allocate.
+    // The "+ WSIZE" capture the overhead for epilogue marker
+    void *next = (char *)heap->brk + ROUNDUP(size + WSIZE, WSIZE);
 
     if ((uintptr_t)next >= K_STACK_START)
     {
         return NULL;
     }
-
-    // Check the invariant
-    assert(size % BOUNDARY == 0);
 
     uintptr_t heap_top_pg = PG_ALIGN(heap->brk);
     if (heap_top_pg != PG_ALIGN(next))
@@ -97,7 +99,7 @@ void *lxbrk(heap_context_t *heap, size_t size)
     }
 
     void *old = heap->brk;
-    heap->brk = (char *)next - WSIZE;
+    heap->brk = (char *)heap->brk + size;
     return old;
 }
 
@@ -105,11 +107,11 @@ void *lx_grow_heap(heap_context_t *heap, size_t sz)
 {
     void *start;
 
-    sz = ROUNDUP(sz, BOUNDARY);
     if (!(start = lxbrk(heap, sz)))
     {
         return NULL;
     }
+    sz = ROUNDUP(sz, BOUNDARY);
 
     uint32_t old_marker = *((uint32_t *)start);
     uint32_t free_hdr = PACK(sz, CHUNK_PF(old_marker));
@@ -189,6 +191,13 @@ void lx_free(void *ptr)
     uint32_t hdr = LW(chunk_ptr);
     size_t sz = CHUNK_S(hdr);
     uint8_t *next_hdr = chunk_ptr + sz;
+
+    // make sure the ptr we are 'bout to free makes sense
+    //   the size trick comes from:
+    //  https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;h=1a1ac1d8f05b6f9bf295d7fdd0f12c2e4650a33c;hb=HEAD#l4437
+    assert_msg(((uintptr_t)ptr < (uintptr_t)(-sz)) && !((uintptr_t)ptr & ~0x3),
+               "free(): invalid pointer");
+    assert_msg(sz > WSIZE && (sz & ~0x3), "free(): invalid size");
 
     SW(chunk_ptr, hdr & ~M_ALLOCATED);
     SW(FPTR(chunk_ptr, sz), hdr & ~M_ALLOCATED);
