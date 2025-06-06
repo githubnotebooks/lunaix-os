@@ -60,7 +60,7 @@ void *vmm_map_page(void *va, void *pa, pt_attr dattr, pt_attr tattr)
 
     // 在页表与页目录中找到一个可用的空位进行映射（位于va或其附近）
     ptd_t *pde = reinterpret_cast<ptd_t *>(ptd[pd_offset]);
-    pt_t *pt = reinterpret_cast<pt_t *>(PT_BASE_VADDR | (pd_offset << 12));
+    pt_t *pt = reinterpret_cast<pt_t *>(PT_VADDR(pd_offset));
     while (pde && pd_offset < 1024)
     {
         if (pt_offset == 1024)
@@ -97,7 +97,6 @@ void *vmm_map_page(void *va, void *pa, pt_attr dattr, pt_attr tattr)
 
     ptd[pd_offset] = PDE(dattr, new_pt_pa);
     memset((void *)PT_VADDR(pd_offset), 0, PM_PAGE_SIZE);
-
     pt[pt_offset] = PTE(tattr, pa);
 
     return reinterpret_cast<void *>(
