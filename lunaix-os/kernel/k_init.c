@@ -18,7 +18,6 @@ extern uint8_t __kernel_end;
 extern uint8_t __init_hhk_end;
 void setup_memory(multiboot_memory_map_t *map, size_t map_size);
 void setup_kernel_runtime();
-constexpr size_t PG_SIZE_BITS = 12;
 
 extern "C" void _kernel_pre_init(multiboot_info_t *mb_info)
 {
@@ -93,7 +92,7 @@ void setup_memory(multiboot_memory_map_t *map, size_t map_size)
     {
         vmm_map_page((void *)(VGA_BUFFER_VADDR + (i << PG_SIZE_BITS)),
                      (void *)(VGA_BUFFER_PADDR + (i << PG_SIZE_BITS)),
-                     PG_PREM_RW, PG_PREM_RW);
+                     PG_PREM_RW);
     }
 
     // 更新VGA缓冲区位置至虚拟地址
@@ -108,7 +107,7 @@ void setup_kernel_runtime()
     for (size_t i = 0; i < (K_STACK_SIZE >> PG_SIZE_BITS); i++)
     {
         vmm_alloc_page((void *)(K_STACK_START + (i << PG_SIZE_BITS)),
-                       PG_PREM_RW, PG_PREM_RW);
+                       PG_PREM_RW);
     }
     printf("[MM] Allocated %d pages for stack start at %p\n",
            K_STACK_SIZE >> PG_SIZE_BITS, K_STACK_START);

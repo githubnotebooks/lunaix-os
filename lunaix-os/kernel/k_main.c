@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 extern uint8_t __kernel_start;
+void cpu_get_brand(char *brand_out);
 
 extern "C" void _kernel_main()
 {

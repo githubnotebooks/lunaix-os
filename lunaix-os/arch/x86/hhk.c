@@ -31,13 +31,14 @@ extern uint8_t _k_stack;
 
 void _init_page(ptd_t *ptd)
 {
-    SET_PDE(ptd, 0, PDE(PG_PRESENT, ptd + PG_MAX_ENTRIES))
+    SET_PDE(ptd, 0, NEW_L1_ENTRY(PG_PRESENT, ptd + PG_MAX_ENTRIES))
 
     // 对低1MiB空间进行对等映射（Identity
     // mapping），也包括了我们的VGA，方便内核操作。
     for (uint32_t i = 0; i < 256; i++)
     {
-        SET_PTE(ptd, PG_TABLE_IDENTITY, i, PTE(PG_PREM_RW, (i << 12)))
+        SET_PTE(ptd, PG_TABLE_IDENTITY, i,
+                NEW_L2_ENTRY(PG_PREM_RW, (i << PG_SIZE_BITS)))
     }
 
     // 对等映射我们的hhk_init，这样一来，当分页与地址转换开启后，我们依然能够照常执行最终的
@@ -46,15 +47,15 @@ void _init_page(ptd_t *ptd)
     for (uint32_t i = 0; i < HHK_PAGE_COUNT; i++)
     {
         SET_PTE(ptd, PG_TABLE_IDENTITY, 256 + i,
-                PTE(PG_PREM_RW, 0x100000 + (i << 12)))
+                NEW_L2_ENTRY(PG_PREM_RW, 0x100000 + (i << PG_SIZE_BITS)))
     }
 
     // --- 将内核重映射至高半区 ---
 
     // 这里是一些计算，主要是计算应当映射进的 页目录 与 页表 的条目索引（Entry
     // Index）
-    uint32_t kernel_pde_index = PD_INDEX(sym_val(__kernel_start));
-    uint32_t kernel_pte_index = PT_INDEX(sym_val(__kernel_start));
+    uint32_t kernel_pde_index = L1_INDEX(sym_val(__kernel_start));
+    uint32_t kernel_pte_index = L2_INDEX(sym_val(__kernel_start));
     uint32_t kernel_pg_counts = KERNEL_PAGE_COUNT;
 
     // 将内核所需要的页表注册进页目录
@@ -63,11 +64,11 @@ void _init_page(ptd_t *ptd)
     for (uint32_t i = 0; i < PG_TABLE_STACK - PG_TABLE_KERNEL; i++)
     {
         SET_PDE(ptd, kernel_pde_index + i,
-                PDE(PG_PREM_RW, PT_ADDR(ptd, PG_TABLE_KERNEL + i)))
+                NEW_L1_ENTRY(PG_PREM_RW, PT_ADDR(ptd, PG_TABLE_KERNEL + i)))
     }
 
     // 首先，检查内核的大小是否可以fit进我们这几个表（12MiB）
-    if (kernel_pg_counts > (PG_TABLE_STACK - PG_TABLE_KERNEL) * 1024)
+    if (kernel_pg_counts > (PG_TABLE_STACK - PG_TABLE_KERNEL) * PG_MAX_ENTRIES)
     {
         // ERROR: require more pages
         //  here should do something else other than head into blocking
@@ -82,11 +83,11 @@ void _init_page(ptd_t *ptd)
     for (uint32_t i = 0; i < kernel_pg_counts; i++)
     {
         SET_PTE(ptd, PG_TABLE_KERNEL, kernel_pte_index + i,
-                PTE(PG_PREM_RW, kernel_pm + (i << 12)))
+                NEW_L2_ENTRY(PG_PREM_RW, kernel_pm + (i << PG_SIZE_BITS)))
     }
 
     // 最后一个entry用于循环映射
-    SET_PDE(ptd, 1023, PDE(T_SELF_REF_PERM, ptd));
+    SET_PDE(ptd, PG_MAX_ENTRIES - 1, NEW_L1_ENTRY(T_SELF_REF_PERM, ptd));
 }
 
 uint32_t __save_subset(uint8_t *destination, uint8_t *base, unsigned int size)

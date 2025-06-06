@@ -12,6 +12,26 @@
       "-Wno-unknown-pragmas",
       "-D__ARCH_IA32",
       "-o",
+      "build/obj/kernel/mm/dmm.c.o",
+      "kernel/mm/dmm.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/mm/dmm.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/mm/dmm.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-o",
       "build/obj/kernel/mm/pmm.c.o",
       "kernel/mm/pmm.c"
     ],
