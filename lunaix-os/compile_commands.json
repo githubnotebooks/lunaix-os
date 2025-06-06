@@ -55,6 +55,27 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
+      "build/obj/kernel/mm/kalloc.c.o",
+      "kernel/mm/kalloc.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/mm/kalloc.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/mm/kalloc.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-g++",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
       "build/obj/kernel/mm/pmm.c.o",
       "kernel/mm/pmm.c"
     ],

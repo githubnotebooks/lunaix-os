@@ -2,14 +2,13 @@
 #include "arch/x86/idt.hpp"
 #include "libc/stdio.h"
 #include "lunaix/constants.hpp"
-#include "lunaix/mm/dmm.hpp"
+#include "lunaix/mm/dmm.h"
+#include "lunaix/mm/kalloc.h"
 #include "lunaix/mm/page.h"
 #include "lunaix/mm/pmm.hpp"
 #include "lunaix/mm/vmm.hpp"
 #include "lunaix/spike.h"
 #include "lunaix/tty/tty.hpp"
-#include <arch/x86/boot/multiboot.h>
-#include <libc/stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -59,7 +58,7 @@ extern "C" void _kernel_post_init()
         vmm_unmap_page((void *)(i << PG_SIZE_BITS));
     }
 
-    assert(dmm_init());
+    assert(kalloc_init());
 }
 
 // 按照 Memory map 标识可用的物理页
