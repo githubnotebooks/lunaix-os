@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define PG_SIZE_BITS 12
+#define PG_SIZE (1 << PG_SIZE_BITS)
 #define PG_INDEX_BITS 10
 
 #define PG_MAX_ENTRIES 1024U

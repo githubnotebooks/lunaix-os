@@ -1,11 +1,18 @@
 #include "arch/x86/interrupts.hpp"
 #include "libc/stdio.h"
-#include "lunaix/tty/tty.hpp"
+#include "lunaix/assert.hpp"
 
-void isr0([[maybe_unused]] isr_param *param)
+void panic(const char *msg, isr_param *param)
 {
-    printf("[PANIC] Exception (%d) CS=0x%X, EIP=0x%X", param->vector, param->cs,
-           param->eip);
+    tty_set_theme(VGA_COLOR_BLACK, VGA_COLOR_LIGHT_RED);
+    tty_clear_line(10);
+    tty_clear_line(11);
+    tty_clear_line(12);
+    tty_set_cpos(0, 11);
+    printf(" INT %u: [0x%x: 0x%x] %s", param->vector, param->cs, param->eip,
+           msg);
+__spin:
+    goto __spin;
 }
 
 extern "C"
@@ -15,8 +22,14 @@ extern "C"
         switch (param->vector)
         {
         case 0:
-            isr0(param);
-            break;
+            panic("Division by 0", param);
+            break; // never reach
+        case FAULT_GENERAL_PROTECTION:
+            panic("General Protection", param);
+            break; // never reach
+        default:
+            panic("Unknown Interrupt", param);
+            break; // never reach
         }
     }
 }

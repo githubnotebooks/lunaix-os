@@ -1,5 +1,6 @@
 #include "hal/cpu.hpp"
 #include "libc/stdio.h"
+#include "lunaix/mm/dmm.hpp"
 #include "lunaix/mm/vmm.hpp"
 #include <stdint.h>
 
@@ -16,7 +17,26 @@ extern "C" void _kernel_main()
     cpu_get_brand(buf);
     printf("CPU: %s\n\n", buf);
 
-    uintptr_t k_start = reinterpret_cast<uintptr_t>(vmm_v2p(&__kernel_start));
+    void *k_start = vmm_v2p(&__kernel_start);
     printf("The kernel's base address mapping: %p->%p\n", &__kernel_start,
            k_start);
+
+    dmm_init();
+
+    // test malloc & free
+
+    uint32_t **arr = (uint32_t **)lx_malloc(10 * sizeof(uint32_t *));
+
+    for (size_t i = 0; i < 10; i++)
+    {
+        arr[i] = (uint32_t *)lx_malloc((i + 1) * 2);
+    }
+
+    for (size_t i = 0; i < 10; i++)
+    {
+        lx_free(arr[i]);
+    }
+
+    lx_free(arr);
+    // assert(0);
 }

@@ -1,6 +1,5 @@
 #include "arch/x86/idt.hpp"
 #include "arch/x86/interrupts.hpp"
-#include "arch/x86/types.hpp"
 #include <stdint.h>
 
 #define IDT_ENTRY 32
@@ -20,4 +19,5 @@ void _set_idt_entry(uint32_t vector, uint16_t seg_selector, void (*isr)(),
 extern "C" void _init_idt()
 {
     _set_idt_entry(FAULT_DIVISION_ERROR, 0x08, _asm_isr0, 0);
+    _set_idt_entry(FAULT_GENERAL_PROTECTION, 0x08, _asm_isr13, 0);
 }

@@ -3,8 +3,13 @@
 
 #include <stddef.h>
 
-void lxsbrk(void *current, void *next);
+#define HEAP_INIT_SIZE 4096
 
-void lxmalloc(size_t size);
+int dmm_init();
 
-void lxfree(size_t size);
+int lxsbrk(void *addr);
+void *lxbrk(size_t size);
+
+void *lx_malloc(size_t size);
+
+void lx_free(void *ptr);
