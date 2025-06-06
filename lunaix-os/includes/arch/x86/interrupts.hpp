@@ -1,5 +1,4 @@
-#ifndef __LUNAIX_INTERRUPTS_H
-#define __LUNAIX_INTERRUPTS_H
+#pragma once
 
 typedef struct
 {
@@ -8,10 +7,8 @@ typedef struct
     unsigned int eip;
     unsigned int cs;
     unsigned int eflags;
+    unsigned int esp;
+    unsigned int ss;
 } __attribute__((packed)) isr_param;
 
 extern "C" void _asm_isr0();
-
-extern "C" void interrupt_handler(isr_param *param);
-
-#endif /* __LUNAIX_INTERRUPTS_H */
