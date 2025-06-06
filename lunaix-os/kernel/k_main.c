@@ -32,11 +32,14 @@ extern "C" void _kernel_main()
         arr[i] = (uint32_t *)lx_malloc((i + 1) * 2);
     }
 
+    void* big_ = lx_malloc(8192);
+
     for (size_t i = 0; i < 10; i++)
     {
         lx_free(arr[i]);
     }
 
     lx_free(arr);
+    lx_free(big_);
     // assert(0);
 }

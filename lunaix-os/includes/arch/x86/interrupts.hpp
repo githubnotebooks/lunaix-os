@@ -38,4 +38,6 @@ extern "C" void _asm_isr0();
 
 extern "C" void _asm_isr13();
 
+extern "C" void _asm_isr14();
+
 extern "C" void interrupt_handler(isr_param *param);

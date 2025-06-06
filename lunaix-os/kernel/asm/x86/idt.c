@@ -20,4 +20,5 @@ extern "C" void _init_idt()
 {
     _set_idt_entry(FAULT_DIVISION_ERROR, 0x08, _asm_isr0, 0);
     _set_idt_entry(FAULT_GENERAL_PROTECTION, 0x08, _asm_isr13, 0);
+    _set_idt_entry(FAULT_PAGE_FAULT, 0x08, _asm_isr14, 0);
 }
