@@ -1,6 +1,6 @@
 #include "arch/x86/boot/multiboot.h"
 #include "arch/x86/idt.hpp"
-#include "lunaix/constants.hpp"
+#include "lunaix/constants.h"
 #include "lunaix/mm/page.h"
 
 #define PT_ADDR(ptd, pt_index) ((ptd_t *)ptd + (pt_index + 1) * 1024)

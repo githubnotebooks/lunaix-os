@@ -1,6 +1,6 @@
 #include "lunaix/tty/tty.hpp"
 #include "libc/string.h"
-#include "lunaix/constants.hpp"
+#include "lunaix/constants.h"
 #include <stdint.h>
 
 #define TTY_WIDTH 80

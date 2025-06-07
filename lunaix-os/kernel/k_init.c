@@ -1,7 +1,7 @@
 #include "arch/x86/boot/multiboot.h"
 #include "arch/x86/idt.hpp"
 #include "libc/stdio.h"
-#include "lunaix/constants.hpp"
+#include "lunaix/constants.h"
 #include "lunaix/mm/dmm.h"
 #include "lunaix/mm/kalloc.h"
 #include "lunaix/mm/page.h"

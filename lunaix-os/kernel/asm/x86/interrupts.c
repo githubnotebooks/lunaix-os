@@ -1,4 +1,5 @@
 #include "arch/x86/interrupts.hpp"
+#include "hal/cpu.hpp"
 #include "libc/stdio.h"
 #include "lunaix/tty/tty.hpp"
 
@@ -22,29 +23,35 @@ void panic(const char *msg, isr_param *param)
         ;
 }
 
-extern "C"
+void interrupt_handler(isr_param *param)
 {
-    void interrupt_handler(isr_param *param)
+    switch (param->vector)
     {
-        switch (param->vector)
+    case 0:
+        panic("Division by 0", param);
+        break; // never reach
+    case FAULT_GENERAL_PROTECTION:
+        panic("General Protection", param);
+        break; // never reach
+    case FAULT_PAGE_FAULT: {
+        void *pg_fault_ptr = (void *)cpu_rcr2();
+        if (pg_fault_ptr)
         {
-        case 0:
-            panic("Division by 0", param);
-            break; // never reach
-        case FAULT_GENERAL_PROTECTION:
-            panic("General Protection", param);
-            break; // never reach
-        case FAULT_PAGE_FAULT:
             panic("Page Fault", param);
-            break; // never reach
-        case LUNAIX_SYS_PANIC:
-            panic_msg((char *)(param->registers.edi));
-            while (1)
-                ;
-            break; // never reach
-        default:
-            panic("Unknown Interrupt", param);
-            break; // never reach
         }
+        else
+        {
+            panic("Null pointer reference", param);
+        }
+        break; // never reach
+    }
+    case LUNAIX_SYS_PANIC:
+        panic_msg((char *)(param->registers.edi));
+        while (1)
+            ;
+        break; // never reach
+    default:
+        panic("Unknown Interrupt", param);
+        break; // never reach
     }
 }

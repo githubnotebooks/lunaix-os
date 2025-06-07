@@ -32,11 +32,10 @@ inline static void spin()
     {                                                                          \
         __assert_fail(msg, __FILE__, __LINE__);                                \
     }
-extern "C"
-{
-    void __assert_fail(const char *expr, const char *file, unsigned int line)
-        __attribute__((noinline, noreturn));
-}
+extern "C" void __assert_fail(const char *expr, const char *file,
+                              unsigned int line)
+    __attribute__((noinline, noreturn));
 #else
-#define assert(cond) // nothing
+#define assert(cond)          // assert nothing
+#define assert_msg(cond, msg) // assert nothing
 #endif
