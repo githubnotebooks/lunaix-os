@@ -1,4 +1,5 @@
 #include "hal/cpu.hpp"
+#include "hal/rtc.h"
 #include "libc/stdio.h"
 #include "lunaix/mm/dmm.h"
 #include "lunaix/mm/kalloc.h"
@@ -42,18 +43,16 @@ extern "C" void _kernel_main()
     big_[1] = 23;
     big_[2] = 3;
 
-    printf("%u, %u, %u", big_[0], big_[1], big_[2]);
+    printf("%u, %u, %u\n", big_[0], big_[1], big_[2]);
 
     // good free
     lxfree(arr);
     lxfree(big_);
 
-    // uint8_t* bad1 = lxmalloc(123);
-    // void* bad2 = lxmalloc(1);
+    rtc_datetime datetime;
 
-    // *((uint32_t*)(bad1 - 4)) = 0xc2343312UL;
+    rtc_get_datetime(&datetime);
 
-    // // bad free
-    // lxfree(bad1);
-    // lxfree(bad2 - 2);
+    printf("%u/%u/%u %u:%u:%u", datetime.year, datetime.month, datetime.day,
+           datetime.hour, datetime.minute, datetime.second);
 }
