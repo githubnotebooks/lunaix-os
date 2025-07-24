@@ -1,9 +1,7 @@
-#include "lunaix/mm/vmm.h"
-#include "hal/cpu.h"
-#include "klibc/string.h"
-#include "lunaix/mm/page.h"
-#include "lunaix/mm/pmm.h"
-#include "lunaix/spike.h"
+#include <hal/cpu.h>
+#include <klibc/string.h>
+#include <lunaix/mm/vmm.h>
+#include <lunaix/spike.h>
 #include <stdbool.h>
 
 void vmm_init()
@@ -13,7 +11,8 @@ void vmm_init()
 
 x86_page_table *vmm_init_pd()
 {
-    x86_page_table *dir = (x86_page_table *)pmm_alloc_page();
+    x86_page_table *dir =
+        (x86_page_table *)pmm_alloc_page(KERNEL_PID, PP_FGPERSIST);
     for (size_t i = 0; i < PG_MAX_ENTRIES; i++)
     {
         dir->entry[i] = PTE_NULL;
@@ -25,8 +24,8 @@ x86_page_table *vmm_init_pd()
     return dir;
 }
 
-int __vmm_map_internal(uint32_t l1_inx, uint32_t l2_inx, uintptr_t pa,
-                       pt_attr attr, int forced)
+int __vmm_map_internal(pid_t pid, uint32_t l1_inx, uint32_t l2_inx,
+                       uintptr_t pa, pt_attr attr, int forced)
 {
     x86_page_table *l1pt = (x86_page_table *)L1_BASE_VADDR;
     x86_page_table *l2pt = (x86_page_table *)L2_VADDR(l1_inx);
@@ -36,7 +35,7 @@ int __vmm_map_internal(uint32_t l1_inx, uint32_t l2_inx, uintptr_t pa,
 
     if (!l1pt->entry[l1_inx])
     {
-        x86_page_table *new_l1pt_pa = (x86_page_table *)pmm_alloc_page();
+        x86_page_table *new_l1pt_pa = pmm_alloc_page(pid, PP_FGPERSIST);
 
         // 物理内存已满！
         if (!new_l1pt_pa)
@@ -44,7 +43,8 @@ int __vmm_map_internal(uint32_t l1_inx, uint32_t l2_inx, uintptr_t pa,
             return 0;
         }
 
-        l1pt->entry[l1_inx] = NEW_L1_ENTRY(attr, new_l1pt_pa);
+        // This must be writable
+        l1pt->entry[l1_inx] = NEW_L1_ENTRY(attr | PG_WRITE, new_l1pt_pa);
         memset((void *)L2_VADDR(l1_inx), 0, PG_SIZE);
     }
 
@@ -55,11 +55,12 @@ int __vmm_map_internal(uint32_t l1_inx, uint32_t l2_inx, uintptr_t pa,
         {
             return 0;
         }
-        if (HAS_FLAGS(l2pte, PG_PRESENT))
-        {
-            assert_msg(pmm_free_page((void *)GET_PG_ADDR(l2pte)),
-                       "fail to release physical page");
-        }
+    }
+
+    if ((HAS_FLAGS(attr, PG_PRESENT)))
+    {
+        // add one on reference count, regardless of existence.
+        pmm_ref_page(pid, (void *)pa);
     }
 
     l2pt->entry[l2_inx] = NEW_L2_ENTRY(attr, pa);
@@ -67,7 +68,7 @@ int __vmm_map_internal(uint32_t l1_inx, uint32_t l2_inx, uintptr_t pa,
     return 1;
 }
 
-void *vmm_map_page(void *va, void *pa, pt_attr tattr)
+void *vmm_map_page(pid_t pid, void *va, void *pa, pt_attr tattr)
 {
     // 显然，对空指针进行映射没有意义。
     if (!pa || !va)
@@ -94,9 +95,9 @@ void *vmm_map_page(void *va, void *pa, pt_attr tattr)
             l2pt = (x86_page_table *)L2_VADDR(l1_index);
         }
         // 页表有空位，只需要开辟一个新的 PTE (Level 2)
-        if (l2pt && !l2pt->entry[l2_index])
+        if (__vmm_map_internal(pid, l1_index, l2_index, (uintptr_t)pa, tattr,
+                               false))
         {
-            l2pt->entry[l2_index] = NEW_L2_ENTRY(tattr, pa);
             return (void *)V_ADDR(l1_index, l2_index, PG_OFFSET(va));
         }
         l2_index++;
@@ -108,7 +109,8 @@ void *vmm_map_page(void *va, void *pa, pt_attr tattr)
         return NULL;
     }
 
-    if (!__vmm_map_internal(l1_index, l2_index, (uintptr_t)pa, tattr, false))
+    if (!__vmm_map_internal(pid, l1_index, l2_index, (uintptr_t)pa, tattr,
+                            false))
     {
         return NULL;
     }
@@ -116,7 +118,7 @@ void *vmm_map_page(void *va, void *pa, pt_attr tattr)
     return (void *)V_ADDR(l1_index, l2_index, PG_OFFSET(va));
 }
 
-void *vmm_fmap_page(void *va, void *pa, pt_attr tattr)
+void *vmm_fmap_page(pid_t pid, void *va, void *pa, pt_attr tattr)
 {
     if (!pa || !va)
     {
@@ -128,46 +130,49 @@ void *vmm_fmap_page(void *va, void *pa, pt_attr tattr)
     uint32_t l1_index = L1_INDEX(va);
     uint32_t l2_index = L2_INDEX(va);
 
-    if (!__vmm_map_internal(l1_index, l2_index, (uintptr_t)pa, tattr, true))
+    if (!__vmm_map_internal(pid, l1_index, l2_index, (uintptr_t)pa, tattr,
+                            true))
     {
         return NULL;
     }
 
     cpu_invplg(va);
 
-    return (void *)V_ADDR(l1_index, l2_index, PG_OFFSET(va));
+    return va;
 }
 
-void *vmm_alloc_page(void *vpn, pt_attr tattr)
+void *vmm_alloc_page(pid_t pid, void *vpn, void **pa, pt_attr tattr,
+                     pp_attr_t pattr)
 {
-    void *pp = pmm_alloc_page();
-    void *result = vmm_map_page(vpn, pp, tattr);
+    void *pp = pmm_alloc_page(pid, pattr);
+    void *result = vmm_map_page(pid, vpn, pp, tattr);
     if (!result)
     {
-        pmm_free_page(pp);
+        pmm_free_page((pid_t)pp, (void *)pid);
     }
+    pa ? (*pa = pp) : 0;
     return result;
 }
 
-int vmm_alloc_pages(void *va, size_t sz, pt_attr tattr)
+int vmm_alloc_pages(pid_t pid, void *va, size_t sz, pt_attr tattr,
+                    pp_attr_t pattr)
 {
     assert((uintptr_t)va % PG_SIZE == 0) assert(sz % PG_SIZE == 0);
 
     void *va_ = va;
-    for (size_t i = 0; i < (sz >> PG_SIZE_BITS); i++)
+    for (size_t i = 0; i < (sz >> PG_SIZE_BITS); i++, va_ += PG_SIZE)
     {
-        void *pp = pmm_alloc_page();
+        void *pp = pmm_alloc_page(pid, pattr);
         uint32_t l1_index = L1_INDEX(va_);
         uint32_t l2_index = L2_INDEX(va_);
-        if (!pp || !__vmm_map_internal(l1_index, l2_index, (uintptr_t)pp, tattr,
-                                       false))
+        if (!pp || !__vmm_map_internal(pid, l1_index, l2_index, (uintptr_t)pp,
+                                       tattr, false))
         {
             // if one failed, release previous allocated pages.
             va_ = va;
-            for (size_t j = 0; j < i; j++)
+            for (size_t j = 0; j < i; j++, va_ += PG_SIZE)
             {
-                vmm_unmap_page(va_);
-                va_ = (char *)va_ + PG_SIZE;
+                vmm_unmap_page(pid, va_);
             }
 
             return false;
@@ -178,7 +183,7 @@ int vmm_alloc_pages(void *va, size_t sz, pt_attr tattr)
     return true;
 }
 
-void vmm_set_mapping(void *va, void *pa, pt_attr attr)
+int vmm_set_mapping(pid_t pid, void *va, void *pa, pt_attr attr)
 {
     assert(((uintptr_t)va & 0xFFFU) == 0);
 
@@ -188,13 +193,14 @@ void vmm_set_mapping(void *va, void *pa, pt_attr attr)
     // prevent map of recursive mapping region
     if (l1_index == 1023)
     {
-        return;
+        return 0;
     }
 
-    __vmm_map_internal(l1_index, l2_index, (uintptr_t)pa, attr, false);
+    __vmm_map_internal(pid, l1_index, l2_index, (uintptr_t)pa, attr, false);
+    return 1;
 }
 
-void vmm_unmap_page(void *va)
+void __vmm_unmap_internal(pid_t pid, void *va, int free_ppage)
 {
     assert(((uintptr_t)va & 0xFFFU) == 0);
 
@@ -215,13 +221,23 @@ void vmm_unmap_page(void *va)
     {
         x86_page_table *l2pt = (x86_page_table *)L2_VADDR(l1_index);
         x86_pte_t l2pte = l2pt->entry[l2_index];
-        if (IS_CACHED(l2pte))
+        if (IS_CACHED(l2pte) && free_ppage)
         {
-            pmm_free_page((void *)l2pte);
+            pmm_free_page(pid, (void *)l2pte);
         }
         cpu_invplg(va);
         l2pt->entry[l2_index] = PTE_NULL;
     }
+}
+
+void vmm_unset_mapping(void *va)
+{
+    __vmm_unmap_internal(0, va, false);
+}
+
+void vmm_unmap_page(pid_t pid, void *va)
+{
+    __vmm_unmap_internal(pid, va, true);
 }
 
 v_mapping vmm_lookup(void *va)
@@ -234,16 +250,17 @@ v_mapping vmm_lookup(void *va)
     x86_page_table *l1pt = (x86_page_table *)L1_BASE_VADDR;
     x86_pte_t l1pte = l1pt->entry[l1_index];
 
-    v_mapping mapping;
+    v_mapping mapping = {.flags = 0, .pa = 0, .pn = 0};
     if (l1pte)
     {
-        x86_pte_t l2pte =
-            ((x86_page_table *)L2_VADDR(l1_index))->entry[l2_index];
+        x86_pte_t *l2pte =
+            &((x86_page_table *)L2_VADDR(l1_index))->entry[l2_index];
         if (l2pte)
         {
-            mapping.flags = PG_ENTRY_FLAGS(l2pte);
-            mapping.pa = PG_ENTRY_ADDR(l2pte);
+            mapping.flags = PG_ENTRY_FLAGS(*l2pte);
+            mapping.pa = PG_ENTRY_ADDR(*l2pte);
             mapping.pn = mapping.pa >> PG_SIZE_BITS;
+            mapping.pte = l2pte;
         }
     }
 

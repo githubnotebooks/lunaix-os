@@ -2,10 +2,15 @@
 #include "arch/x86/idt.h"
 #include "arch/x86/interrupts.h"
 #include "hal/acpi/acpi.h"
+#include <arch/x86/boot/multiboot.h>
+#include <arch/x86/idt.h>
+#include <arch/x86/interrupts.h>
+#include <hal/acpi/acpi.h>
 #include <hal/apic.h>
 #include <hal/ioapic.h>
 #include <hal/rtc.h>
 #include <klibc/stdio.h>
+#include <klibc/string.h>
 #include <lunaix/clock.h>
 #include <lunaix/common.h>
 #include <lunaix/mm/kalloc.h>
@@ -13,7 +18,10 @@
 #include <lunaix/mm/pmm.h>
 #include <lunaix/mm/vmm.h>
 #include <lunaix/peripheral/ps2kbd.h>
+#include <lunaix/process.h>
+#include <lunaix/sched.h>
 #include <lunaix/spike.h>
+#include <lunaix/syscall.h>
 #include <lunaix/syslog.h>
 #include <lunaix/timer.h>
 #include <lunaix/tty/tty.h>
@@ -23,21 +31,21 @@
 extern uint8_t __kernel_start;
 extern uint8_t __kernel_end;
 extern uint8_t __init_hhk_end;
-void setup_memory(multiboot_memory_map_t *map, size_t map_size);
-void setup_kernel_runtime();
+
+#define PP_KERN_SHARED (PP_FGSHARED | PP_TKERN)
 
 // Set remotely by kernel/asm/x86/prologue.S
 multiboot_info_t *_k_init_mb_info;
 
-LOG_MODULE("INIT");
+LOG_MODULE("BOOT");
+
+extern void _lxinit_main();
+void spawn_lxinit();
+void _kernel_post_init();
 
 void setup_memory(multiboot_memory_map_t *map, size_t map_size);
 
-void setup_kernel_runtime();
-
 void lock_reserved_memory();
-
-void unlock_reserved_memory();
 
 void _kernel_pre_init()
 {
@@ -63,11 +71,57 @@ void _kernel_init()
     setup_memory((multiboot_memory_map_t *)_k_init_mb_info->mmap_addr,
                  map_size);
 
-    setup_kernel_runtime();
+    // 为内核创建一个专属栈空间。
+    for (size_t i = 0; i < (KSTACK_SIZE >> PG_SIZE_BITS); i++)
+    {
+        vmm_alloc_page(KERNEL_PID, (void *)(KSTACK_START + (i << PG_SIZE_BITS)),
+                       NULL, PG_PREM_RW, 0);
+    }
+    kprintf(KINFO "[MM] Allocated %d pages for stack start at %p\n",
+            KSTACK_SIZE >> PG_SIZE_BITS, KSTACK_START);
+
+    sched_init();
+
+    spawn_lxinit();
+}
+
+/**
+ * @brief 创建并运行init进程
+ *
+ */
+void spawn_lxinit()
+{
+    struct proc_info kinit;
+    uint32_t *kstack = (uint32_t *)KSTACK_TOP - 4 * 5;
+
+    memset(&kinit, 0, sizeof(kinit));
+    kinit.page_table = (void *)cpu_rcr3();
+    kinit.parent = -1;
+    kinit.pid = 1;
+    kinit.intr_ctx = (isr_param){.registers.esp = (reg32)kstack,
+                                 .cs = KCODE_SEG,
+                                 .eip = (unsigned int)_kernel_post_init,
+                                 .ss = KDATA_SEG,
+                                 .eflags = cpu_reflags()};
+
+    /*
+        因为schedule从设计上是需要在中断环境中执行的
+        可是我们需要在这里手动调用 schedule，从而使我们的init能够被执行。
+        所以需要模拟中断产生时的栈里内容。
+    */
+    kstack[2] = kinit.intr_ctx.eip;
+    kstack[3] = kinit.intr_ctx.cs;
+    kstack[4] = kinit.intr_ctx.eflags;
+
+    push_process(&kinit);
+
+    schedule();
 }
 
 void _kernel_post_init()
 {
+    assert_msg(kalloc_init(), "Fail to initialize heap");
+
     size_t hhk_init_pg_count = ((uintptr_t)(&__init_hhk_end)) >> PG_SIZE_BITS;
     kprintf(KINFO "[MM] Releaseing %d pages from 0x0.\n", hhk_init_pg_count);
 
@@ -75,7 +129,7 @@ void _kernel_post_init()
     // I just release 4 pages for my APIC & IOAPIC remappings
     for (size_t i = 0; i < 3; i++)
     {
-        vmm_unmap_page((void *)(i << PG_SIZE_BITS));
+        vmm_unmap_page(KERNEL_PID, (void *)(i << PG_SIZE_BITS));
     }
 
     // 锁定所有系统预留页（内存映射IO，ACPI之类的），并且进行1:1映射
@@ -83,13 +137,14 @@ void _kernel_post_init()
 
     acpi_init(_k_init_mb_info);
     uintptr_t ioapic_addr = acpi_get_context()->madt.ioapic->ioapic_addr;
+    pmm_mark_page_occupied(KERNEL_PID, FLOOR(__APIC_BASE_PADDR, PG_SIZE_BITS),
+                           0);
+    pmm_mark_page_occupied(KERNEL_PID, FLOOR(ioapic_addr, PG_SIZE_BITS), 0);
 
-    pmm_mark_page_occupied(FLOOR(__APIC_BASE_PADDR, PG_SIZE_BITS));
-    pmm_mark_page_occupied(FLOOR(ioapic_addr, PG_SIZE_BITS));
-
-    vmm_set_mapping((void *)APIC_BASE_VADDR, (void *)__APIC_BASE_PADDR,
+    vmm_set_mapping(KERNEL_PID, (void *)APIC_BASE_VADDR,
+                    (void *)__APIC_BASE_PADDR, PG_PREM_RW);
+    vmm_set_mapping(KERNEL_PID, (void *)IOAPIC_BASE_VADDR, (void *)ioapic_addr,
                     PG_PREM_RW);
-    vmm_set_mapping((void *)IOAPIC_BASE_VADDR, (void *)ioapic_addr, PG_PREM_RW);
 
     apic_init();
     ioapic_init();
@@ -97,10 +152,16 @@ void _kernel_post_init()
     clock_init();
     ps2_kbd_init();
 
+    syscall_install();
+
     for (size_t i = 256; i < hhk_init_pg_count; i++)
     {
-        vmm_unmap_page((void *)(i << PG_SIZE_BITS));
+        vmm_unmap_page(KERNEL_PID, (void *)(i << PG_SIZE_BITS));
     }
+
+    _lxinit_main();
+
+    spin();
 }
 
 void lock_reserved_memory()
@@ -120,30 +181,8 @@ void lock_reserved_memory()
         size_t pg_num = CEIL(mmap.len_low, PG_SIZE_BITS);
         for (size_t j = 0; j < pg_num; j++)
         {
-            vmm_set_mapping((pa + (j << PG_SIZE_BITS)),
+            vmm_set_mapping(KERNEL_PID, (pa + (j << PG_SIZE_BITS)),
                             (pa + (j << PG_SIZE_BITS)), PG_PREM_R);
-        }
-    }
-}
-
-void unlock_reserved_memory()
-{
-    multiboot_memory_map_t *mmaps =
-        (multiboot_memory_map_t *)_k_init_mb_info->mmap_addr;
-    size_t map_size =
-        _k_init_mb_info->mmap_length / sizeof(multiboot_memory_map_t);
-    for (unsigned int i = 0; i < map_size; i++)
-    {
-        multiboot_memory_map_t mmap = mmaps[i];
-        if (mmap.type == MULTIBOOT_MEMORY_AVAILABLE)
-        {
-            continue;
-        }
-        uint8_t *pa = (uint8_t *)PG_ALIGN(mmap.addr_low);
-        size_t pg_num = CEIL(mmap.len_low, PG_SIZE_BITS);
-        for (size_t j = 0; j < pg_num; j++)
-        {
-            vmm_unmap_page((pa + (j << PG_SIZE_BITS)));
         }
     }
 }
@@ -171,37 +210,25 @@ void setup_memory(multiboot_memory_map_t *map, size_t map_size)
 
     // 将内核占据的页，包括前1MB，hhk_init 设为已占用
     size_t pg_count = V2P(&__kernel_end) >> PG_SIZE_BITS;
-    pmm_mark_chunk_occupied(0, pg_count);
+    pmm_mark_chunk_occupied(KERNEL_PID, 0, pg_count, 0);
     kprintf(KINFO "[MM] Allocated %d pages for kernel.\n", pg_count);
 
     size_t vga_buf_pgs = VGA_BUFFER_SIZE >> PG_SIZE_BITS;
 
     // 首先，标记VGA部分为已占用
-    pmm_mark_chunk_occupied(VGA_BUFFER_PADDR >> PG_SIZE_BITS, vga_buf_pgs);
+    pmm_mark_chunk_occupied(KERNEL_PID, VGA_BUFFER_PADDR >> PG_SIZE_BITS,
+                            vga_buf_pgs, 0);
 
     // 重映射VGA文本缓冲区（以后会变成显存，i.e., framebuffer）
     for (size_t i = 0; i < vga_buf_pgs; i++)
     {
-        vmm_map_page((void *)(VGA_BUFFER_VADDR + (i << PG_SIZE_BITS)),
-                     (void *)(VGA_BUFFER_PADDR + (i << PG_SIZE_BITS)),
-                     PG_PREM_RW);
+        vmm_map_page(
+            KERNEL_PID, (void *)(VGA_BUFFER_VADDR + (i << PG_SIZE_BITS)),
+            (void *)(VGA_BUFFER_PADDR + (i << PG_SIZE_BITS)), PG_PREM_RW);
     }
 
     // 更新VGA缓冲区位置至虚拟地址
     tty_set_buffer((void *)VGA_BUFFER_VADDR);
 
     kprintf(KINFO "[MM] Mapped VGA to %p.\n", VGA_BUFFER_VADDR);
-}
-
-void setup_kernel_runtime()
-{
-    // 为内核创建一个专属栈空间。
-    for (size_t i = 0; i < (K_STACK_SIZE >> PG_SIZE_BITS); i++)
-    {
-        vmm_alloc_page((void *)(K_STACK_START + (i << PG_SIZE_BITS)),
-                       PG_PREM_RW);
-    }
-    kprintf(KINFO "[MM] Allocated %d pages for stack start at %p\n",
-            K_STACK_SIZE >> PG_SIZE_BITS, K_STACK_START);
-    assert_msg(kalloc_init(), "Fail to initialize heap");
 }

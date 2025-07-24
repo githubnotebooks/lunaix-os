@@ -33,4 +33,5 @@ void _init_idt()
 
     // system defined interrupts
     _set_idt_entry(LUNAIX_SYS_PANIC, 0x08, _asm_isr32, 0);
+    _set_idt_entry(LUNAIX_SYS_CALL, 0x08, _asm_isr33, 0);
 }

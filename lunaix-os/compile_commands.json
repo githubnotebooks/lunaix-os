@@ -14,12 +14,56 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
+      "build/obj/kernel/process.c.o",
+      "kernel/process.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/process.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/process.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-std=gnu99",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
       "build/obj/kernel/mm/dmm.c.o",
       "kernel/mm/dmm.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
     "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/mm/dmm.c",
     "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/mm/dmm.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-std=gnu99",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/mm/cow.c.o",
+      "kernel/mm/cow.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/mm/cow.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/mm/cow.c.o"
   },
   {
     "arguments": [
@@ -114,6 +158,50 @@
       "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
+      "-g",
+      "-std=gnu99",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/syscall.c.o",
+      "kernel/syscall.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/syscall.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/syscall.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-std=gnu99",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/asm/x86/pfault.c.o",
+      "kernel/asm/x86/pfault.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/pfault.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/pfault.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
       "-o",
       "build/obj/kernel/asm/x86/interrupt.S.o",
       "kernel/asm/x86/interrupt.S"
@@ -121,6 +209,28 @@
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
     "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/interrupt.S",
     "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/interrupt.S.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-std=gnu99",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/asm/x86/tss.c.o",
+      "kernel/asm/x86/tss.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/tss.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/tss.c.o"
   },
   {
     "arguments": [
@@ -156,6 +266,19 @@
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
     "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/prologue.S",
     "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/prologue.S.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-o",
+      "build/obj/kernel/asm/x86/syscall.S.o",
+      "kernel/asm/x86/syscall.S"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/syscall.S",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/syscall.S.o"
   },
   {
     "arguments": [
@@ -370,12 +493,12 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/kernel/k_main.c.o",
-      "kernel/k_main.c"
+      "build/obj/kernel/sched.c.o",
+      "kernel/sched.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/k_main.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/k_main.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/sched.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/sched.c.o"
   },
   {
     "arguments": [
@@ -398,6 +521,28 @@
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
     "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/tty/tty.c",
     "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/tty/tty.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-std=gnu99",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/lxinit.c.o",
+      "kernel/lxinit.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/lxinit.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/lxinit.c.o"
   },
   {
     "arguments": [
