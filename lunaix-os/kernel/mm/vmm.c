@@ -8,7 +8,7 @@
 
 void vmm_init()
 {
-    // TODO: something here?
+    // XXX: something here?
 }
 
 x86_page_table *vmm_init_pd()

@@ -133,7 +133,7 @@ void *pmm_alloc_page()
 
 int pmm_free_page(void *page)
 {
-    // TODO: Add kernel reserved memory page check
+    // XXX: Add kernel reserved memory page check or simply ownership check?
     uint32_t pg = (uintptr_t)page >> 12;
     if (pg && pg < max_pg)
     {

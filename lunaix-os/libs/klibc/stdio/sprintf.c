@@ -28,8 +28,6 @@ void __sprintf_internal(char *buffer, const char *fmt, size_t max_len,
     // This sprintf just a random implementation I found it on Internet . lol.
     //      Of course, with some modifications for porting to LunaixOS :)
 
-    // TODO: support floating point.
-
     char numbuf[NUMBUFSIZ];
     uint32_t ptr = 0;
     for (; *fmt; ++fmt)
