@@ -25,13 +25,10 @@ void ioapic_init()
 
     // grab ourselves these irq numbers
     uint8_t irq_rtc = ioapic_get_irq(acpi_ctx, PC_AT_IRQ_RTC);
-    uint8_t irq_kbd = ioapic_get_irq(acpi_ctx, PC_AT_IRQ_KBD);
 
     // PC_AT_IRQ_RTC -> RTC_TIMER_IV, fixed, edge trigged, polarity=high,
     // physical, APIC ID 0
     ioapic_redirect(irq_rtc, RTC_TIMER_IV, 0, IOAPIC_DELMOD_FIXED);
-
-    ioapic_redirect(irq_kbd, PC_KBD_IV, 0, IOAPIC_DELMOD_FIXED);
 }
 
 uint8_t ioapic_get_irq(acpi_context *acpi_ctx, uint8_t old_irq)
