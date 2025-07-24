@@ -64,6 +64,16 @@ void *vmm_alloc_page(void *va, pt_attr tattr);
 int vmm_alloc_pages(void *va, size_t sz, pt_attr tattr);
 
 /**
+ * @brief 设置一个映射，如果映射已存在，则忽略。
+ * 
+ * @param va 
+ * @param pa 
+ * @param attr 
+ */
+void
+vmm_set_mapping(void* va, void* pa, pt_attr attr);
+
+/**
  * @brief 删除一个映射
  *
  * @param vpn

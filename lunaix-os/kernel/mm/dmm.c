@@ -19,8 +19,8 @@
 #include "lunaix/mm/dmm.h"
 #include "lunaix/constants.h"
 #include "lunaix/mm/page.h"
-#include "lunaix/mm/vmm.hpp"
-#include "lunaix/spike.hpp"
+#include "lunaix/mm/vmm.h"
+#include "lunaix/spike.h"
 
 int dmm_init(heap_context_t *heap)
 {

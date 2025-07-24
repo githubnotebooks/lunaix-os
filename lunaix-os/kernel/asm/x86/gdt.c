@@ -1,4 +1,4 @@
-#include "arch/x86/gdt.hpp"
+#include "arch/x86/gdt.h"
 #include <stdint.h>
 
 #define GDT_ENTRY 5
@@ -15,7 +15,7 @@ void _set_gdt_entry(uint32_t index, uint32_t base, uint32_t limit,
     _gdt[index] |= SEG_BASE_L(base) | SEG_LIM_L(limit);
 }
 
-extern "C" void _init_gdt()
+void _init_gdt()
 {
     _set_gdt_entry(0, 0, 0, 0);
     _set_gdt_entry(1, 0, 0xfffff, SEG_R0_CODE);

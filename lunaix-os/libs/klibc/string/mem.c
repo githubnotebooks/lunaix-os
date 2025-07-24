@@ -1,4 +1,4 @@
-#include "libc/string.h"
+#include "klibc/string.h"
 #include <stdint.h>
 
 void *memcpy(void *dest, const void *src, size_t num)

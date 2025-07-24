@@ -1,7 +1,7 @@
 [
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -22,7 +22,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -43,7 +43,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -64,7 +64,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -85,7 +85,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -106,7 +106,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-o",
@@ -119,7 +119,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -140,7 +140,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-o",
@@ -153,7 +153,28 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/asm/x86/intr_routines.c.o",
+      "kernel/asm/x86/intr_routines.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/intr_routines.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/intr_routines.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -174,7 +195,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -195,7 +216,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -216,7 +237,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -237,7 +258,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -258,7 +279,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -279,7 +300,70 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/kprintf.c.o",
+      "kernel/kprintf.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/kprintf.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/kprintf.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/hal/apic.c.o",
+      "hal/apic.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/hal/apic.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/hal/apic.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/hal/ioapic.c.o",
+      "hal/ioapic.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/hal/ioapic.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/hal/ioapic.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -300,7 +384,49 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/hal/acpi/acpi.c.o",
+      "hal/acpi/acpi.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/hal/acpi/acpi.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/hal/acpi/acpi.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/hal/acpi/parser/madt_parser.c.o",
+      "hal/acpi/parser/madt_parser.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/hal/acpi/parser/madt_parser.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/hal/acpi/parser/madt_parser.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -321,7 +447,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-o",
@@ -334,7 +460,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -355,7 +481,7 @@
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -367,16 +493,16 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/libs/libc/stdlib/itoa.c.o",
-      "libs/libc/stdlib/itoa.c"
+      "build/obj/libs/klibc/stdlib/itoa.c.o",
+      "libs/klibc/stdlib/itoa.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/libc/stdlib/itoa.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/libc/stdlib/itoa.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/klibc/stdlib/itoa.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/klibc/stdlib/itoa.c.o"
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -388,16 +514,16 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/libs/libc/string/mem.c.o",
-      "libs/libc/string/mem.c"
+      "build/obj/libs/klibc/string/mem.c.o",
+      "libs/klibc/string/mem.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/libc/string/mem.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/libc/string/mem.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/klibc/string/mem.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/klibc/string/mem.c.o"
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -409,16 +535,16 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/libs/libc/string/strchr.c.o",
-      "libs/libc/string/strchr.c"
+      "build/obj/libs/klibc/string/strchr.c.o",
+      "libs/klibc/string/strchr.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/libc/string/strchr.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/libc/string/strchr.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/klibc/string/strchr.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/klibc/string/strchr.c.o"
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -430,16 +556,16 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/libs/libc/string/strlen.c.o",
-      "libs/libc/string/strlen.c"
+      "build/obj/libs/klibc/string/strlen.c.o",
+      "libs/klibc/string/strlen.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/libc/string/strlen.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/libc/string/strlen.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/klibc/string/strlen.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/klibc/string/strlen.c.o"
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -451,16 +577,16 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/libs/libc/string/strcpy.c.o",
-      "libs/libc/string/strcpy.c"
+      "build/obj/libs/klibc/string/strcpy.c.o",
+      "libs/klibc/string/strcpy.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/libc/string/strcpy.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/libc/string/strcpy.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/klibc/string/strcpy.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/klibc/string/strcpy.c.o"
   },
   {
     "arguments": [
-      "/usr/bin/i686-elf-g++",
+      "/usr/bin/i686-elf-gcc",
       "-Iincludes",
       "-c",
       "-g",
@@ -472,32 +598,11 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/libs/libc/stdio/sprintf.c.o",
-      "libs/libc/stdio/sprintf.c"
+      "build/obj/libs/klibc/stdio/sprintf.c.o",
+      "libs/klibc/stdio/sprintf.c"
     ],
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/libc/stdio/sprintf.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/libc/stdio/sprintf.c.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/i686-elf-g++",
-      "-Iincludes",
-      "-c",
-      "-g",
-      "-ffreestanding",
-      "-O0",
-      "-Wall",
-      "-Wextra",
-      "-Wno-unknown-pragmas",
-      "-D__ARCH_IA32",
-      "-D__LUNAIXOS_DEBUG__",
-      "-o",
-      "build/obj/libs/libc/stdio/printf.c.o",
-      "libs/libc/stdio/printf.c"
-    ],
-    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/libc/stdio/printf.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/libc/stdio/printf.c.o"
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/libs/klibc/stdio/sprintf.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/libs/klibc/stdio/sprintf.c.o"
   }
 ]

@@ -1,5 +1,5 @@
-#include "lunaix/tty/tty.hpp"
-#include "libc/string.h"
+#include "lunaix/tty/tty.h"
+#include "klibc/string.h"
 #include "lunaix/constants.h"
 #include <stdint.h>
 
@@ -107,4 +107,9 @@ void tty_get_cpos(unsigned int *x, unsigned int *y)
 {
     *x = tty_x;
     *y = tty_y;
+}
+
+vga_attribute tty_get_theme()
+{
+    return tty_theme_color;
 }

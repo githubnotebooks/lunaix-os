@@ -57,4 +57,4 @@
     SD_TYPE(SEG_DATA_RDWR) | SD_CODE_DATA(1) | SD_DPL(3) | SD_PRESENT(1) |     \
         SD_AVL(0) | SD_64BITS(0) | SD_32BITS(1) | SD_4K_GRAN(1)
 
-extern "C" void _init_gdt();
+void _init_gdt();

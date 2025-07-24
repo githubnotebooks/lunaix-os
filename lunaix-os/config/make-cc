@@ -1,6 +1,6 @@
-CC := i686-elf-g++
+TOOLCHAIN := /usr/bin
+CC := i686-elf-gcc
 AS := i686-elf-as
-
 
 ARCH_OPT := -D__ARCH_IA32
 O := -O2

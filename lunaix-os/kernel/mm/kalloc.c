@@ -12,13 +12,11 @@
  *
  */
 #include "lunaix/mm/kalloc.h"
-#include "libc/string.h"
+#include "klibc/string.h"
+#include "lunaix/constants.h"
 #include "lunaix/mm/dmm.h"
-#include <libc/string.h>
-#include <lunaix/constants.h>
-#include <lunaix/mm/dmm.h>
-#include <lunaix/mm/kalloc.h>
-#include <lunaix/spike.hpp>
+#include "lunaix/mm/kalloc.h"
+#include "lunaix/spike.h"
 #include <stdint.h>
 
 extern uint8_t __kernel_heap_start;
@@ -78,15 +76,23 @@ void *lxmalloc(size_t size)
     return lx_malloc_internal(&__kalloc_kheap, size);
 }
 
-void *lxcalloc(size_t size)
+void *lxcalloc(size_t n, size_t elem)
 {
-    void *ptr = lxmalloc(size);
+    size_t pd = n * elem;
+
+    // overflow detection
+    if (pd < elem || pd < n)
+    {
+        return NULL;
+    }
+
+    void *ptr = lxmalloc(pd);
     if (!ptr)
     {
         return NULL;
     }
 
-    return memset(ptr, 0, size);
+    return memset(ptr, 0, pd);
 }
 
 void lxfree(void *ptr)

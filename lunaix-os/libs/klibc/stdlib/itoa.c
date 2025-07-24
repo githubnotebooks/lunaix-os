@@ -1,5 +1,5 @@
 #define __LUNAIX_LIBC
-#include "libc/stdlib.h"
+#include "klibc/stdlib.h"
 #include <stddef.h>
 
 char base_char[] = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -47,5 +47,5 @@ char *__itoa_internal(int value, char *str, int base, unsigned int *size)
 
 char *itoa(int value, char *str, int base)
 {
-    return __itoa_internal(value, str, base, nullptr);
+    return __itoa_internal(value, str, base, NULL);
 }

@@ -1,7 +1,8 @@
 #define __LUNAIX_LIBC
-#include "libc/stdio.h"
-#include "libc/stdlib.h"
-#include "libc/string.h"
+
+#include "klibc/stdio.h"
+#include "klibc/stdlib.h"
+#include "klibc/string.h"
 #include <stdint.h>
 
 #define NUMBUFSIZ 24
@@ -21,7 +22,8 @@ static const char flag_chars[] = "#0- +";
 
 // FIXME: use something like IO_FILE to abstract this into a more flexible,
 // stream based, vprintf
-extern "C" void __sprintf_internal(char *buffer, const char *fmt, va_list vargs)
+void __sprintf_internal(char *buffer, const char *fmt, size_t max_len,
+                        va_list vargs)
 {
     // This sprintf just a random implementation I found it on Internet . lol.
     //      Of course, with some modifications for porting to LunaixOS :)
@@ -32,6 +34,11 @@ extern "C" void __sprintf_internal(char *buffer, const char *fmt, va_list vargs)
     uint32_t ptr = 0;
     for (; *fmt; ++fmt)
     {
+        if (max_len && ptr >= max_len - 1)
+        {
+            break;
+        }
+
         if (*fmt != '%')
         {
             buffer[ptr++] = *fmt;
@@ -95,7 +102,7 @@ extern "C" void __sprintf_internal(char *buffer, const char *fmt, va_list vargs)
         int base = 10;
         unsigned long num = 0;
         int length = 0;
-        char *data = nullptr;
+        char *data = NULL;
     again:
         switch (*fmt)
         {
@@ -236,6 +243,14 @@ void sprintf(char *buffer, const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
-    __sprintf_internal(buffer, fmt, args);
+    __sprintf_internal(buffer, fmt, 0, args);
+    va_end(args);
+}
+
+void snprintf(char *buffer, size_t n, const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    __sprintf_internal(buffer, fmt, n, args);
     va_end(args);
 }

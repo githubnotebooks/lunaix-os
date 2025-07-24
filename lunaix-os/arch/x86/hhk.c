@@ -1,5 +1,5 @@
 #include "arch/x86/boot/multiboot.h"
-#include "arch/x86/idt.hpp"
+#include "arch/x86/idt.h"
 #include "lunaix/constants.h"
 #include "lunaix/mm/page.h"
 
@@ -100,8 +100,7 @@ uint32_t __save_subset(uint8_t *destination, uint8_t *base, unsigned int size)
     return i;
 }
 
-extern "C" void _save_multiboot_info(multiboot_info_t *info,
-                                     uint8_t *destination)
+void _save_multiboot_info(multiboot_info_t *info, uint8_t *destination)
 {
     uint32_t current = 0;
     uint8_t *info_b = (uint8_t *)info;
@@ -125,7 +124,7 @@ extern "C" void _save_multiboot_info(multiboot_info_t *info,
     }
 }
 
-extern "C" void _hhk_init(ptd_t *ptd, uint32_t kpg_size)
+void _hhk_init(ptd_t *ptd, uint32_t kpg_size)
 {
 
     // 初始化 kpg 全为0

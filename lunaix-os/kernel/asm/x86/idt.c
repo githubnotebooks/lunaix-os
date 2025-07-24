@@ -1,5 +1,5 @@
-#include "arch/x86/idt.hpp"
-#include "arch/x86/interrupts.hpp"
+#include "arch/x86/idt.h"
+#include "arch/x86/interrupts.h"
 #include <stdint.h>
 
 #define IDT_ENTRY 256
@@ -22,6 +22,13 @@ void _init_idt()
     _set_idt_entry(FAULT_DIVISION_ERROR, 0x08, _asm_isr0, 0);
     _set_idt_entry(FAULT_GENERAL_PROTECTION, 0x08, _asm_isr13, 0);
     _set_idt_entry(FAULT_PAGE_FAULT, 0x08, _asm_isr14, 0);
+
+    _set_idt_entry(APIC_ERROR_IV, 0x08, _asm_isr200, 0);
+    _set_idt_entry(APIC_LINT0_IV, 0x08, _asm_isr201, 0);
+    _set_idt_entry(APIC_TIMER_IV, 0x08, _asm_isr202, 0);
+    _set_idt_entry(APIC_SPIV_IV, 0x08, _asm_isr203, 0);
+
+    _set_idt_entry(RTC_TIMER_IV, 0x08, _asm_isr210, 0);
 
     // system defined interrupts
     _set_idt_entry(LUNAIX_SYS_PANIC, 0x08, _asm_isr32, 0);

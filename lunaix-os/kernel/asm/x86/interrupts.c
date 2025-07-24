@@ -1,57 +1,59 @@
-#include "arch/x86/interrupts.hpp"
-#include "hal/cpu.hpp"
+#include "arch/x86/interrupts.h"
+#include "hal/apic.h"
+#include "hal/cpu.h"
 #include "libc/stdio.h"
-#include "lunaix/tty/tty.hpp"
+#include "lunaix/syslog.h"
+#include "lunaix/tty/tty.h"
 
-void panic_msg(const char *msg)
+int_subscriber subscribers[256];
+
+static int_subscriber fallback = (int_subscriber)0;
+
+void intr_subscribe(const uint8_t vector, int_subscriber subscriber)
 {
-    tty_set_theme(VGA_COLOR_WHITE, VGA_COLOR_RED);
-    tty_clear_line(10);
-    tty_clear_line(11);
-    tty_clear_line(12);
-    tty_set_cpos(0, 11);
-    printf("  %s", msg);
+    subscribers[vector] = subscriber;
 }
 
-void panic(const char *msg, isr_param *param)
+void intr_unsubscribe(const uint8_t vector, int_subscriber subscriber)
 {
-    char buf[1024];
-    sprintf(buf, "INT %u: (%x) [%p: %p] %s", param->vector, param->err_code,
-            param->cs, param->eip, msg);
-    panic_msg(buf);
-    while (1)
-        ;
-}
-
-void interrupt_handler(isr_param *param)
-{
-    switch (param->vector)
+    if (subscribers[vector] == subscriber)
     {
-    case 0:
-        panic("Division by 0", param);
-        break; // never reach
-    case FAULT_GENERAL_PROTECTION:
-        panic("General Protection", param);
-        break; // never reach
-    case FAULT_PAGE_FAULT: {
-        void *pg_fault_ptr = (void *)cpu_rcr2();
-        if (pg_fault_ptr)
-        {
-            panic("Page Fault", param);
-        }
-        else
-        {
-            panic("Null pointer reference", param);
-        }
-        break; // never reach
+        subscribers[vector] = (int_subscriber)0;
     }
-    case LUNAIX_SYS_PANIC:
-        panic_msg((char *)(param->registers.edi));
-        while (1)
-            ;
-        break; // never reach
-    default:
-        panic("Unknown Interrupt", param);
-        break; // never reach
+}
+
+void intr_set_fallback_handler(int_subscriber subscribers)
+{
+    fallback = subscribers;
+}
+
+void intr_handler(isr_param *param)
+{
+    if (param->vector <= 255)
+    {
+        int_subscriber subscriber = subscribers[param->vector];
+        if (subscriber)
+        {
+            subscriber(param);
+            goto done;
+        }
     }
+
+    if (fallback)
+    {
+        fallback(param);
+        goto done;
+    }
+
+    kprint_panic("INT %u: (%x) [%p: %p] Unknown", param->vector,
+                 param->err_code, param->cs, param->eip);
+
+done:
+    // for all external interrupts except the spurious interrupt
+    //  this is required by Intel Manual Vol.3A, section 10.8.1 & 10.8.5
+    if (param->vector >= EX_INTERRUPT_BEGIN && param->vector != APIC_SPIV_IV)
+    {
+        apic_done_servicing();
+    }
+    return;
 }

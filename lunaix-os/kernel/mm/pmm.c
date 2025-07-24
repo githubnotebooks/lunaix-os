@@ -1,4 +1,4 @@
-#include "lunaix/mm/pmm.hpp"
+#include "lunaix/mm/pmm.h"
 #include "lunaix/mm/page.h"
 
 #define MARK_PG_AUX_VAR(ppn)                                                   \

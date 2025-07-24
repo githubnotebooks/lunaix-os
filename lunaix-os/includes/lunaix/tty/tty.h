@@ -1,6 +1,6 @@
-#pragma once
-
-using vga_attribute = unsigned short;
+#ifndef __LUNAIX_TTY_H
+#define __LUNAIX_TTY_H
+typedef unsigned short vga_attribute;
 
 #define VGA_COLOR_BLACK 0
 #define VGA_COLOR_BLUE 1
@@ -38,3 +38,7 @@ void tty_clear_line(unsigned int y);
 void tty_set_cpos(unsigned int x, unsigned int y);
 
 void tty_get_cpos(unsigned int *x, unsigned int *y);
+
+vga_attribute tty_get_theme();
+
+#endif /* __LUNAIX_TTY_H */
