@@ -39,9 +39,14 @@ void tty_put_char(char chr)
         break;
     case '\n':
         tty_y++;
-        __attribute((fallthrough));
+        // fall through
     case '\r':
         tty_x = 0;
+        break;
+    case '\x08':
+        tty_x = tty_x ? tty_x - 1 : 0;
+        *(tty_vga_buffer + tty_x + tty_y * TTY_WIDTH) =
+            (tty_theme_color | 0x20);
         break;
     default:
         *(tty_vga_buffer + tty_x + tty_y * TTY_WIDTH) = (tty_theme_color | chr);
