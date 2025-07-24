@@ -22,6 +22,7 @@
 
 extern uint8_t __kernel_heap_start;
 
+// FIXME: This should go to PCB once we're started to support multitasking
 static heap_context_t __kalloc_kheap;
 
 void *lx_malloc_internal(heap_context_t *heap, size_t size);
