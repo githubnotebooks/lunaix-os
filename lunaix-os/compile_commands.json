@@ -13,27 +13,6 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
-      "build/obj/kernel/timer.c.o",
-      "kernel/timer.c"
-    ],
-    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
-    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/timer.c",
-    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/timer.c.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/i686-elf-gcc",
-      "-Iincludes",
-      "-c",
-      "-g",
-      "-ffreestanding",
-      "-O0",
-      "-Wall",
-      "-Wextra",
-      "-Wno-unknown-pragmas",
-      "-D__ARCH_IA32",
-      "-D__LUNAIXOS_DEBUG__",
-      "-o",
       "build/obj/kernel/mm/dmm.c.o",
       "kernel/mm/dmm.c"
     ],
@@ -234,6 +213,69 @@
     "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
     "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/asm/x86/interrupts.c",
     "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/asm/x86/interrupts.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/peripheral/ps2kbd.c.o",
+      "kernel/peripheral/ps2kbd.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/peripheral/ps2kbd.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/peripheral/ps2kbd.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/time/timer.c.o",
+      "kernel/time/timer.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/time/timer.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/time/timer.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
+      "build/obj/kernel/time/clock.c.o",
+      "kernel/time/clock.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/time/clock.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/time/clock.c.o"
   },
   {
     "arguments": [

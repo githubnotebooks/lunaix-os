@@ -1,23 +1,22 @@
 #include "arch/x86/boot/multiboot.h"
 #include "arch/x86/idt.h"
-#include "libc/stdio.h"
-#include "lunaix/constants.h"
-#include "lunaix/mm/dmm.h"
-#include "lunaix/mm/kalloc.h"
-#include "lunaix/mm/page.h"
-#include "lunaix/mm/pmm.h"
-#include "lunaix/mm/vmm.h"
-#include "lunaix/spike.h"
-#include "lunaix/tty/tty.h"
-#include <arch/x86/interrupts.h>
-#include <hal/acpi/acpi.h>
+#include "arch/x86/interrupts.h"
+#include "hal/acpi/acpi.h"
 #include <hal/apic.h>
 #include <hal/ioapic.h>
 #include <hal/rtc.h>
 #include <klibc/stdio.h>
+#include <lunaix/clock.h>
 #include <lunaix/common.h>
+#include <lunaix/mm/kalloc.h>
+#include <lunaix/mm/page.h>
+#include <lunaix/mm/pmm.h>
+#include <lunaix/mm/vmm.h>
+#include <lunaix/peripheral/ps2kbd.h>
+#include <lunaix/spike.h>
 #include <lunaix/syslog.h>
 #include <lunaix/timer.h>
+#include <lunaix/tty/tty.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -95,6 +94,8 @@ void _kernel_post_init()
     apic_init();
     ioapic_init();
     timer_init(SYS_TIMER_FREQUENCY_HZ);
+    clock_init();
+    ps2_kbd_init();
 
     for (size_t i = 256; i < hhk_init_pg_count; i++)
     {

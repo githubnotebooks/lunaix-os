@@ -5,8 +5,11 @@
 #include "lunaix/mm/kalloc.h"
 #include "lunaix/mm/vmm.h"
 #include "lunaix/spike.h"
+#include <lunaix/clock.h>
+#include <lunaix/mm/kalloc.h>
+#include <lunaix/mm/vmm.h>
+#include <lunaix/spike.h>
 #include <lunaix/syslog.h>
-#include <lunaix/time.h>
 #include <lunaix/timer.h>
 #include <stdint.h>
 
@@ -66,7 +69,7 @@ static datetime_t datetime;
 
 void test_timer(void *payload)
 {
-    time_getdatetime(&datetime);
+    clock_walltime(&datetime);
 
     kprintf(KWARN "%u/%02u/%02u %02u:%02u:%02u\r", datetime.year,
             datetime.month, datetime.day, datetime.hour, datetime.minute,

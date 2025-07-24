@@ -9,12 +9,10 @@
  *
  */
 #include "hal/apic.h"
+#include "arch/x86/interrupts.h"
 #include "hal/cpu.h"
 #include "hal/pic.h"
 #include "hal/rtc.h"
-
-#include "arch/x86/interrupts.h"
-
 #include "lunaix/spike.h"
 #include "lunaix/syslog.h"
 
@@ -41,7 +39,7 @@ void apic_init()
     asm volatile("movl %0, %%ecx\n"
                  "rdmsr\n"
                  "orl %1, %%eax\n"
-                 "wrmsr\n" ::"i"(IA32_APIC_BASE_MSR),
+                 "wrmsr\n" ::"i"(IA32_MSR_APIC_BASE),
                  "i"(IA32_APIC_ENABLE)
                  : "eax", "ecx", "edx");
 

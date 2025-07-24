@@ -32,10 +32,13 @@
 #define APIC_TIMER_IV 202
 #define APIC_SPIV_IV 203
 
+// Keyboard
+#define PC_KBD_IV 204
+
 #define RTC_TIMER_IV 210
 
 #define PC_AT_IRQ_RTC 8
-#define PC_AT_IRQ_KBD_BUF_FULL 1
+#define PC_AT_IRQ_KBD 1
 
 #ifndef __ASM__
 
@@ -108,6 +111,8 @@ void _asm_isr201();
 void _asm_isr202();
 
 void _asm_isr203();
+
+void _asm_isr204();
 
 void _asm_isr210();
 
