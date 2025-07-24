@@ -9,14 +9,15 @@
 #include "lunaix/mm/vmm.h"
 #include "lunaix/spike.h"
 #include "lunaix/tty/tty.h"
-#include <arch/x86/boot/multiboot.h>
 #include <arch/x86/interrupts.h>
 #include <hal/acpi/acpi.h>
 #include <hal/apic.h>
 #include <hal/ioapic.h>
 #include <hal/rtc.h>
 #include <klibc/stdio.h>
+#include <lunaix/common.h>
 #include <lunaix/syslog.h>
+#include <lunaix/timer.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -26,6 +27,7 @@ extern uint8_t __init_hhk_end;
 void setup_memory(multiboot_memory_map_t *map, size_t map_size);
 void setup_kernel_runtime();
 
+// Set remotely by kernel/asm/x86/prologue.S
 multiboot_info_t *_k_init_mb_info;
 
 LOG_MODULE("INIT");
@@ -91,7 +93,8 @@ void _kernel_post_init()
     vmm_set_mapping((void *)IOAPIC_BASE_VADDR, (void *)ioapic_addr, PG_PREM_RW);
 
     ioapic_init();
-    init_apic();
+    apic_init();
+    timer_init(SYS_TIMER_FREQUENCY_HZ);
 
     for (size_t i = 256; i < hhk_init_pg_count; i++)
     {

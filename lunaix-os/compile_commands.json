@@ -13,6 +13,27 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
+      "build/obj/kernel/timer.c.o",
+      "kernel/timer.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/timer.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/timer.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
       "build/obj/kernel/mm/dmm.c.o",
       "kernel/mm/dmm.c"
     ],

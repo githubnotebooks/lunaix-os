@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lunaix/constants.h"
+#include <lunaix/common.h>
 #include <stdint.h>
 
 #define PG_SIZE_BITS 12

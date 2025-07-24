@@ -5,7 +5,7 @@
 #include "lunaix/syslog.h"
 #include "lunaix/tty/tty.h"
 
-int_subscriber subscribers[256];
+static int_subscriber subscribers[256];
 
 static int_subscriber fallback = (int_subscriber)0;
 

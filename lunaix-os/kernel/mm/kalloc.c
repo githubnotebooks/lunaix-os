@@ -17,11 +17,12 @@
 #include "lunaix/mm/dmm.h"
 #include "lunaix/mm/kalloc.h"
 #include "lunaix/spike.h"
+#include <lunaix/common.h>
 #include <stdint.h>
 
 extern uint8_t __kernel_heap_start;
 
-heap_context_t __kalloc_kheap;
+static heap_context_t __kalloc_kheap;
 
 void *lx_malloc_internal(heap_context_t *heap, size_t size);
 

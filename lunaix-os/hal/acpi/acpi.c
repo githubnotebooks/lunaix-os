@@ -8,7 +8,7 @@
 
 #include "parser/madt_parser.h"
 
-acpi_context *toc = NULL;
+static acpi_context *toc = NULL;
 
 LOG_MODULE("ACPI")
 

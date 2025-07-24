@@ -11,6 +11,7 @@
  */
 #include "hal/rtc.h"
 #include "klibc/string.h"
+#include <lunaix/time.h>
 
 void rtc_init()
 {
@@ -39,22 +40,22 @@ uint8_t bcd2dec(uint8_t bcd)
     return ((bcd & 0xF0) >> 1) + ((bcd & 0xF0) >> 3) + (bcd & 0xf);
 }
 
-int rtc_date_same(volatile rtc_datetime *a, volatile rtc_datetime *b)
+int rtc_date_same(datetime_t *a, datetime_t *b)
 {
     return a->year == b->year && a->month == b->month && a->day == b->day &&
            a->weekday == b->weekday && a->minute == b->minute &&
            a->second == b->second;
 }
 
-void rtc_get_datetime(volatile rtc_datetime *datetime)
+void time_getdatetime(datetime_t *datetime)
 {
-    rtc_datetime current;
+    datetime_t current;
 
     do
     {
         while (rtc_read_reg(RTC_REG_A) & 0x80)
             ;
-        memcpy((void *)&current, (const void *)datetime, sizeof(rtc_datetime));
+        memcpy(&current, datetime, sizeof(datetime_t));
 
         datetime->year = rtc_read_reg(RTC_REG_YRS);
         datetime->month = rtc_read_reg(RTC_REG_MTH);
