@@ -25,6 +25,8 @@ void tty_set_buffer(void *vga_buf);
 
 void tty_set_theme(vga_attribute fg, vga_attribute bg);
 
+vga_attribute tty_get_theme();
+
 void tty_put_char(char chr);
 
 void tty_put_str(const char *str);
