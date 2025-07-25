@@ -2,6 +2,7 @@
 #include <hal/apic.h>
 #include <hal/cpu.h>
 #include <lunaix/mm/page.h>
+#include <lunaix/mm/vmm.h>
 #include <lunaix/process.h>
 #include <lunaix/sched.h>
 #include <lunaix/syslog.h>
@@ -40,6 +41,9 @@ void intr_handler(isr_param *param)
     __current->intr_ctx = *param;
 
     cpu_lcr3((reg32)__kernel_ptd);
+
+    // 将当前进程的页目录挂载到内核地址空间里（页目录挂载点#1），方便访问。
+    vmm_mount_pd(PD_MOUNT_1, __current->page_table);
 
     isr_param *lparam = &__current->intr_ctx;
 

@@ -31,12 +31,13 @@ void _lxinit_main()
         pid_t pid = 0;
         if (!(pid = fork()))
         {
-            while (1)
+            sleep(i);
+            if (i == 3)
             {
-                // kprintf(KINFO "Process %d\n", i);
-                tty_put_char('0' + i);
-                yield();
+                i = *(int *)0x400000;
             }
+            tty_put_char('0' + i);
+            _exit(0);
         }
         kprintf(KINFO "Forked %d\n", pid);
     }

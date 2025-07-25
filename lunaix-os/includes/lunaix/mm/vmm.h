@@ -120,12 +120,12 @@ void *vmm_dup_page(pid_t pid, void *pa);
  * @param pde 页目录的物理地址
  * @return void*
  */
-void *vmm_mount_pd(void *pde);
+void *vmm_mount_pd(uintptr_t mnt, void *pde);
 
 /**
  * @brief 卸载已挂载的虚拟地址空间
  *
  */
-void *vmm_unmount_pd();
+void *vmm_unmount_pd(uintptr_t mnt);
 
 #endif /* __LUNAIX_VMM_H */

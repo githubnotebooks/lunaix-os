@@ -47,14 +47,14 @@ struct lx_timer
  */
 void timer_init(uint32_t frequency);
 
-int timer_run_second(uint32_t second, void (*callback)(void *), void *payload,
-                     uint8_t flags);
+struct lx_timer *timer_run_second(uint32_t second, void (*callback)(void *),
+                                  void *payload, uint8_t flags);
 
-int timer_run_ms(uint32_t millisecond, void (*callback)(void *), void *payload,
-                 uint8_t flags);
+struct lx_timer *timer_run_ms(uint32_t millisecond, void (*callback)(void *),
+                              void *payload, uint8_t flags);
 
-int timer_run(ticks_t ticks, void (*callback)(void *), void *payload,
-              uint8_t flags);
+struct lx_timer *timer_run(ticks_t ticks, void (*callback)(void *),
+                           void *payload, uint8_t flags);
 
 struct lx_timer_context *timer_context();
 

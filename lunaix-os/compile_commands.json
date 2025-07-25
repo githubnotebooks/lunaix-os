@@ -36,6 +36,28 @@
       "-D__ARCH_IA32",
       "-D__LUNAIXOS_DEBUG__",
       "-o",
+      "build/obj/kernel/mm/region.c.o",
+      "kernel/mm/region.c"
+    ],
+    "directory": "/home/someone/Workspace/Project/lunaix-os/lunaix-os",
+    "file": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/kernel/mm/region.c",
+    "output": "/home/someone/Workspace/Project/lunaix-os/lunaix-os/build/obj/kernel/mm/region.c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/i686-elf-gcc",
+      "-Iincludes",
+      "-c",
+      "-g",
+      "-std=gnu99",
+      "-ffreestanding",
+      "-Og",
+      "-Wall",
+      "-Wextra",
+      "-Wno-unknown-pragmas",
+      "-D__ARCH_IA32",
+      "-D__LUNAIXOS_DEBUG__",
+      "-o",
       "build/obj/kernel/mm/dmm.c.o",
       "kernel/mm/dmm.c"
     ],
