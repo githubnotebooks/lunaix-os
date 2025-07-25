@@ -30,8 +30,6 @@ void sched_init()
     sched_ctx = (struct scheduler){._procs = (struct proc_info *)&__proc_table,
                                    .ptable_len = 0,
                                    .procs_index = 0};
-
-    __current = &dummy;
 }
 
 void schedule()
@@ -63,7 +61,8 @@ void schedule()
 
     apic_done_servicing();
 
-    asm volatile("pushl %0\n jmp soft_iret\n" ::"r"(&__current->intr_ctx)
+    asm volatile("pushl %0\n"
+                 "jmp soft_iret\n" ::"r"(&__current->intr_ctx)
                  : "memory");
 }
 

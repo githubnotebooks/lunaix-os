@@ -52,29 +52,34 @@ void *lx_grow_heap(heap_context_t *heap, size_t sz);
     Note: the brk always point to the beginning of epilogue.
 */
 
+static heap_context_t kheap;
 int dmm_init(heap_context_t *heap);
+
 int kalloc_init()
 {
-    heap_context_t *kheap = &__current->mm.k_heap;
-    kheap->start = &__kernel_heap_start;
-    kheap->brk = NULL;
-    kheap->max_addr = (void *)KSTACK_START;
+    kheap.start = &__kernel_heap_start;
+    kheap.brk = NULL;
+    kheap.max_addr = (void *)KSTACK_START;
 
-    if (!dmm_init(kheap))
+    if (!dmm_init(&kheap))
     {
         return 0;
     }
 
-    SW(kheap->start, PACK(4, M_ALLOCATED));
-    SW(kheap->start + WSIZE, PACK(0, M_ALLOCATED));
-    kheap->brk += WSIZE;
+    SW(kheap.start, PACK(4, M_ALLOCATED));
+    SW(kheap.start + WSIZE, PACK(0, M_ALLOCATED));
+    kheap.brk += WSIZE;
 
-    return lx_grow_heap(kheap, HEAP_INIT_SIZE) != NULL;
+    return lx_grow_heap(&kheap, HEAP_INIT_SIZE) != NULL;
 }
 
 void *lxmalloc(size_t size)
 {
-    return lx_malloc_internal(&__current->mm.k_heap, size);
+    mutex_lock(&kheap.lock);
+    void *r = lx_malloc_internal(&kheap, size);
+    mutex_unlock(&kheap.lock);
+
+    return r;
 }
 
 void *lxcalloc(size_t n, size_t elem)
@@ -102,6 +107,7 @@ void lxfree(void *ptr)
     {
         return;
     }
+    mutex_lock(&kheap.lock);
 
     uint8_t *chunk_ptr = (uint8_t *)ptr - WSIZE;
     uint32_t hdr = LW(chunk_ptr);
@@ -121,6 +127,8 @@ void lxfree(void *ptr)
     SW(next_hdr, LW(next_hdr) | M_PREV_FREE);
 
     coalesce(chunk_ptr);
+
+    mutex_unlock(&kheap.lock);
 }
 
 void *lx_malloc_internal(heap_context_t *heap, size_t size)

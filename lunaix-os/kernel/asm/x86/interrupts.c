@@ -1,10 +1,10 @@
 #include <arch/x86/interrupts.h>
 #include <hal/apic.h>
 #include <hal/cpu.h>
+#include <lunaix/mm/page.h>
 #include <lunaix/process.h>
 #include <lunaix/sched.h>
 #include <lunaix/syslog.h>
-#include <lunaix/tty/tty.h>
 
 LOG_MODULE("intr")
 
@@ -30,6 +30,8 @@ void intr_set_fallback_handler(int_subscriber subscribers)
     fallback = subscribers;
 }
 
+extern x86_page_table *__kernel_ptd;
+
 void intr_handler(isr_param *param)
 {
     // if (param->vector == LUNAIX_SYS_CALL) {
@@ -37,24 +39,28 @@ void intr_handler(isr_param *param)
     // }
     __current->intr_ctx = *param;
 
-    if (param->vector <= 255)
+    cpu_lcr3((reg32)__kernel_ptd);
+
+    isr_param *lparam = &__current->intr_ctx;
+
+    if (lparam->vector <= 255)
     {
-        int_subscriber subscriber = subscribers[param->vector];
+        int_subscriber subscriber = subscribers[lparam->vector];
         if (subscriber)
         {
-            subscriber(param);
+            subscriber(lparam);
             goto done;
         }
     }
 
     if (fallback)
     {
-        fallback(param);
+        fallback(lparam);
         goto done;
     }
 
-    kprint_panic("INT %u: (%x) [%p: %p] Unknown", param->vector,
-                 param->err_code, param->cs, param->eip);
+    kprint_panic("INT %u: (%x) [%p: %p] Unknown", lparam->vector,
+                 lparam->err_code, lparam->cs, lparam->eip);
 
 done:
 
@@ -64,10 +70,12 @@ done:
 
     // for all external interrupts except the spurious interrupt
     //  this is required by Intel Manual Vol.3A, section 10.8.1 & 10.8.5
-    if (param->vector >= EX_INTERRUPT_BEGIN && param->vector != APIC_SPIV_IV)
+    if (lparam->vector >= EX_INTERRUPT_BEGIN && lparam->vector != APIC_SPIV_IV)
     {
         apic_done_servicing();
     }
+
+    cpu_lcr3((reg32)__current->page_table);
 
     *param = __current->intr_ctx;
 

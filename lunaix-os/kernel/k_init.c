@@ -37,6 +37,10 @@ extern uint8_t __init_hhk_end;
 // Set remotely by kernel/asm/x86/prologue.S
 multiboot_info_t *_k_init_mb_info;
 
+x86_page_table *__kernel_ptd;
+
+struct proc_info tmp;
+
 LOG_MODULE("BOOT");
 
 extern void _lxinit_main();
@@ -58,6 +62,12 @@ void _kernel_pre_init()
 
     tty_init((void *)VGA_BUFFER_PADDR);
     tty_set_theme(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+
+    __kernel_ptd = (x86_page_table *)cpu_rcr3();
+
+    tmp = (struct proc_info){.page_table = __kernel_ptd};
+
+    __current = &tmp;
 }
 
 void _kernel_init()
@@ -81,8 +91,6 @@ void _kernel_init()
             KSTACK_SIZE >> PG_SIZE_BITS, KSTACK_START);
 
     sched_init();
-
-    spawn_lxinit();
 }
 
 /**
@@ -92,30 +100,38 @@ void _kernel_init()
 void spawn_lxinit()
 {
     struct proc_info kinit;
-    uint32_t *kstack = (uint32_t *)KSTACK_TOP - 4 * 5;
 
     memset(&kinit, 0, sizeof(kinit));
-    kinit.page_table = (void *)cpu_rcr3();
     kinit.parent = -1;
     kinit.pid = 1;
-    kinit.intr_ctx = (isr_param){.registers.esp = (reg32)kstack,
+    kinit.intr_ctx = (isr_param){.registers.esp = KSTACK_TOP - 20,
                                  .cs = KCODE_SEG,
-                                 .eip = (unsigned int)_kernel_post_init,
+                                 .eip = (unsigned int)_lxinit_main,
                                  .ss = KDATA_SEG,
                                  .eflags = cpu_reflags()};
+    kinit.page_table = dup_pagetable(kinit.pid);
 
+    // Ok... 准备fork进我们的init进程
     /*
-        因为schedule从设计上是需要在中断环境中执行的
-        可是我们需要在这里手动调用 schedule，从而使我们的init能够被执行。
-        所以需要模拟中断产生时的栈里内容。
+        这里是一些栈的设置，因为我们将切换到一个新的地址空间里，并且使用一个全新的栈。
+        让iret满意！
     */
-    kstack[2] = kinit.intr_ctx.eip;
-    kstack[3] = kinit.intr_ctx.cs;
-    kstack[4] = kinit.intr_ctx.eflags;
+    asm volatile("movl %%cr3, %%eax\n"
+                 "movl %%esp, %%ebx\n"
+                 "movl %0, %%cr3\n"
+                 "movl %1, %%esp\n"
+                 "pushf\n"
+                 "pushl %2\n"
+                 "pushl %3\n"
+                 "pushl $0\n"
+                 "pushl $0\n"
+                 "movl %%eax, %%cr3\n"
+                 "movl %%ebx, %%esp\n" ::"r"(kinit.page_table),
+                 "i"(KSTACK_TOP), "i"(KCODE_SEG), "r"(kinit.intr_ctx.eip)
+                 : "%eax", "%ebx", "memory");
 
+    // 向调度器注册进程，然后这里阻塞等待调度器调度就好了。
     push_process(&kinit);
-
-    schedule();
 }
 
 void _kernel_post_init()
@@ -159,7 +175,7 @@ void _kernel_post_init()
         vmm_unmap_page(KERNEL_PID, (void *)(i << PG_SIZE_BITS));
     }
 
-    _lxinit_main();
+    spawn_lxinit();
 
     spin();
 }
