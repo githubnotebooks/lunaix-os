@@ -31,10 +31,11 @@
 
 #define HEAP_INIT_SIZE 4096
 
-int lxsbrk(heap_context_t *heap, void *addr);
-void *lxbrk(heap_context_t *heap, size_t size);
+int dmm_init(heap_context_t *heap);
 
-void *lx_malloc(heap_context_t *heap, size_t size);
+int lxbrk(heap_context_t *heap, void *addr);
+
+void *lxsbrk(heap_context_t *heap, size_t size);
 
 void *lx_malloc_internal(heap_context_t *heap, size_t size);
 

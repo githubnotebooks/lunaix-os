@@ -24,20 +24,20 @@
 #include <lunaix/spike.h>
 #include <lunaix/syscall.h>
 
-__DEFINE_LXSYSCALL1(int, sbrk, void *, addr)
+__DEFINE_LXSYSCALL1(void *, sbrk, size_t, size)
 {
     heap_context_t *uheap = &__current->mm.u_heap;
     mutex_lock(&uheap->lock);
-    int r = lxsbrk(uheap, addr);
+    void *r = lxsbrk(uheap, size);
     mutex_unlock(&uheap->lock);
     return r;
 }
 
-__DEFINE_LXSYSCALL1(void *, brk, size_t, size)
+__DEFINE_LXSYSCALL1(int, brk, void *, addr)
 {
     heap_context_t *uheap = &__current->mm.u_heap;
     mutex_lock(&uheap->lock);
-    void *r = lxbrk(uheap, size);
+    int r = lxbrk(uheap, addr);
     mutex_unlock(&uheap->lock);
     return r;
 }
@@ -53,12 +53,12 @@ int dmm_init(heap_context_t *heap)
            NULL;
 }
 
-int lxsbrk(heap_context_t *heap, void *addr)
+int lxbrk(heap_context_t *heap, void *addr)
 {
-    return lxbrk(heap, (char *)addr - (char *)(heap->brk)) != NULL;
+    return -(lxsbrk(heap, addr - heap->brk) == (void *)-1);
 }
 
-void *lxbrk(heap_context_t *heap, size_t size)
+void *lxsbrk(heap_context_t *heap, size_t size)
 {
     if (size == 0)
     {
@@ -75,6 +75,7 @@ void *lxbrk(heap_context_t *heap, size_t size)
     if (next >= heap->max_addr || next < current_brk)
     {
         __current->k_status = LXINVLDPTR;
+        return (void *)-1;
     }
 
     uintptr_t diff = PG_ALIGN(next) - PG_ALIGN(current_brk);

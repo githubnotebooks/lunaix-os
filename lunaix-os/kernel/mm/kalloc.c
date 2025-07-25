@@ -255,7 +255,7 @@ void *lx_grow_heap(heap_context_t *heap, size_t sz)
     void *start;
 
     // The "+ WSIZE" capture the overhead for epilogue marker
-    if (!(start = lxbrk(heap, sz + WSIZE)))
+    if (!(start = lxsbrk(heap, sz + WSIZE)))
     {
         return NULL;
     }
